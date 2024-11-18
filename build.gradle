@@ -56,6 +56,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
+tasks.register('copyPrivate', Copy) {
+    copy {
+        from './2024_DANPOON_TEAM_30_SUBMODULE'
+        include "*.yml"
+        into 'src/main/resources'
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
