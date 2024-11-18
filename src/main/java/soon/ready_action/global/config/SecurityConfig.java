@@ -22,8 +22,8 @@ import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
 import soon.ready_action.global.oauth2.service.Oauth2KakaoService;
 
 @RequiredArgsConstructor
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
@@ -45,9 +45,8 @@ public class SecurityConfig {
         http
             .oauth2Login(oauth2 -> {
                 oauth2
-                    .userInfoEndpoint(
-                        (userInfoEndpointConfig) ->
-                            userInfoEndpointConfig.userService(oauth2KakaoService))
+                    .userInfoEndpoint(userInfoEndpointConfig ->
+                        userInfoEndpointConfig.userService(oauth2KakaoService))
                     .successHandler(oauth2KakaoSuccessHandler)
                     .failureHandler(oauth2KakaoFailHandler);
             });
@@ -55,14 +54,16 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> {
                 auth
+                    .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/v1/signup").hasAuthority("ROLE_GUEST")
-                    .anyRequest().permitAll();
-            })
+                    .anyRequest().authenticated();
+            });
+
+        http
             .addFilterBefore(new JwtAuthorizationFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-
     }
 
     @Bean

@@ -2,6 +2,7 @@ package soon.ready_action.global.oauth2.service;
 
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -12,6 +13,7 @@ import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
 import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Oauth2KakaoService extends DefaultOAuth2UserService {

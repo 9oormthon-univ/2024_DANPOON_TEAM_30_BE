@@ -15,7 +15,7 @@ import soon.ready_action.domain.member.service.MemberService;
 import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
 import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
 import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
-import soon.ready_action.global.provider.ObjectMapperProvider;
+import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,14 +24,11 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final TokenProvider tokenProvider;
     private final MemberService memberService;
-    private final ObjectMapperProvider objectMapperProvider;
-
+    private final CustomObjectMapperProvider customObjectMapperProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException {
-        log.info("onAuthenticationSuccess");
-
         CustomOAuth2Member oAuth2Member = extractOAuth2Member(authentication);
 
         TokenResponse tokenResponse = handleTokenGenerationAndUpdate(oAuth2Member);
@@ -55,7 +52,7 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter()
-            .write(objectMapperProvider.getObjectMapper().writeValueAsString(authResponse)
+            .write(customObjectMapperProvider.getObjectMapper().writeValueAsString(authResponse)
             );
     }
 
