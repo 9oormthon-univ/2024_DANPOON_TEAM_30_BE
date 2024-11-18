@@ -15,4 +15,13 @@ public class MemberRepository {
         return memberJpaRepository.findById(memberId)
             .orElseThrow(RuntimeException::new);
     }
+
+    public Member findByKakaoId(String kakaoId) {
+        return memberJpaRepository.findByKakaoId(kakaoId)
+            .orElse(null);
+    }
+
+    public void save(Member member) {
+        memberJpaRepository.save(member);
+    }
 }

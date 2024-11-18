@@ -19,6 +19,7 @@ import soon.ready_action.global.oauth2.handler.Oauth2KakaoFailHandler;
 import soon.ready_action.global.oauth2.handler.Oauth2KakaoSuccessHandler;
 import soon.ready_action.global.oauth2.jwt.filter.JwtAuthorizationFilter;
 import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
+import soon.ready_action.global.oauth2.service.Oauth2KakaoService;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final Oauth2KakaoSuccessHandler oauth2KakaoSuccessHandler;
     private final Oauth2KakaoFailHandler oauth2KakaoFailHandler;
+    private final Oauth2KakaoService oauth2KakaoService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +45,9 @@ public class SecurityConfig {
         http
             .oauth2Login(oauth2 -> {
                 oauth2
-//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig.userService(customOAuth2UserService))
+                    .userInfoEndpoint(
+                        (userInfoEndpointConfig) ->
+                            userInfoEndpointConfig.userService(oauth2KakaoService))
                     .successHandler(oauth2KakaoSuccessHandler)
                     .failureHandler(oauth2KakaoFailHandler);
             });
