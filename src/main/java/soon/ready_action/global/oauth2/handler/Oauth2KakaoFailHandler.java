@@ -17,5 +17,7 @@ public class Oauth2KakaoFailHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) throws IOException, ServletException {
         log.info("카카오 로그인 실패했습니다. 에러 메시지 : {}", exception.getMessage());
+
+        // TODO login 페이지 리다이렉트
     }
 }
