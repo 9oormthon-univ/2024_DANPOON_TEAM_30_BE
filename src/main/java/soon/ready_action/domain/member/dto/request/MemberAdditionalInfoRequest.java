@@ -21,7 +21,7 @@ public record MemberAdditionalInfoRequest(
     @PastOrPresent(message = "생년월일은 현재 날짜 이전이어야 합니다.")
     LocalDate birthday,
 
-    @Schema(description = "카테고리 활성 상태", example = "['건강', '주거']")
+    @Schema(description = "관심 카테고리 타이틀", example = "['건강', '주거']")
     @NotNull(message = "카테고리는 한개 이상 선택되야 합니다.")
     List<String> categories
 ) {
