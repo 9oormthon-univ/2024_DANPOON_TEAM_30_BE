@@ -6,6 +6,8 @@ import static soon.ready_action.global.oauth2.jwt.common.TokenType.AUTHORIZATION
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -49,7 +51,7 @@ public class TokenProvider {
 
     public TokenResponse reissueToken(Long memberId, Role role, String refreshToken) {
         if (!validateToken(refreshToken)) {
-            throw new IllegalArgumentException("정상적이지 않은 토큰");
+            throw new JwtException("정상적이지 않은 토큰");
         }
         String newAccessToken = generateAccessToken(memberId, role);
         String newRefreshToken = generateRefreshToken();

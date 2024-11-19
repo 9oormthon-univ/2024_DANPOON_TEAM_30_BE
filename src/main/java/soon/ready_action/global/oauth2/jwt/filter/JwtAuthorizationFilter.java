@@ -21,6 +21,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.equals("/api/v1/auth/reissue");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
         String tokenFromHeader = getTokenFromHeader(request);
