@@ -54,7 +54,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> {
                 auth
-                    .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                    .requestMatchers(
+                        "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue"
+                    ).permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/v1/signup").hasAuthority("ROLE_GUEST")
                     .anyRequest().authenticated();
             });
