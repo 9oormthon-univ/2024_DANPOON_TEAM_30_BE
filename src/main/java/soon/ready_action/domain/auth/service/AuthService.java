@@ -9,7 +9,6 @@ import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.entity.Role;
 import soon.ready_action.domain.member.repository.MemberRepository;
-import soon.ready_action.domain.member.service.MemberService;
 import soon.ready_action.global.exception.ForbiddenException;
 import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
 import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
@@ -52,6 +51,7 @@ public class AuthService {
             throw new ForbiddenException();
         }
 
+        // 토큰 권한 초기화를 위한 재발급
         TokenResponse tokenResponse = tokenProvider.reissueToken(member.getId(), member.getRole(),
             member.getRefreshToken());
 
