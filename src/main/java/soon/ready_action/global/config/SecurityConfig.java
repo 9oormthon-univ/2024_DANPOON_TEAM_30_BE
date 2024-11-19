@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -43,6 +42,17 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfig()));
 
         http
+            .authorizeHttpRequests(auth -> {
+                auth
+                    .requestMatchers(
+                        "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue", "/swagger-ui/**",
+                        "/v3/api-docs/**"
+                    ).permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/signup").hasAuthority("ROLE_GUEST")
+                    .anyRequest().authenticated();
+            });
+
+        http
             .oauth2Login(oauth2 -> {
                 oauth2
                     .userInfoEndpoint(userInfoEndpointConfig ->
@@ -52,26 +62,10 @@ public class SecurityConfig {
             });
 
         http
-            .authorizeHttpRequests(auth -> {
-                auth
-                    .requestMatchers(
-                        "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue"
-                    ).permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/signup").hasAuthority("ROLE_GUEST")
-                    .anyRequest().authenticated();
-            });
-
-        http
             .addFilterBefore(new JwtAuthorizationFilter(tokenProvider),
                 UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return webSecurity -> webSecurity.ignoring()
-            .requestMatchers("/swagger-ui/**", "/favicon.ico", "/api-docs/**");
     }
 
     @Bean

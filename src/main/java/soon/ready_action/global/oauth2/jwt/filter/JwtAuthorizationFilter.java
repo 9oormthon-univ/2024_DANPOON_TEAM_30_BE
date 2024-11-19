@@ -8,9 +8,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
@@ -23,8 +25,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/v1/auth/reissue");
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+
+        List<String> exemptPaths = List.of(
+            "/favicon.ico",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/api/v1/auth/reissue"
+        );
+
+        return exemptPaths.stream().anyMatch(exemptPath -> antPathMatcher.match(exemptPath, path));
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

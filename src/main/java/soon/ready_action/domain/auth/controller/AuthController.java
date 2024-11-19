@@ -13,10 +13,11 @@ import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 @RestController
-public class AuthController {
+public class AuthController extends AuthDocsController{
 
     private final AuthService authService;
 
+    @Override
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponse> reissueToken(@RequestBody ReissueTokenRequest reissueTokenRequest) {
         TokenResponse tokenResponse = authService.reissueToken(reissueTokenRequest);
