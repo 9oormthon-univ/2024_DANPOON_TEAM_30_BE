@@ -1,10 +1,12 @@
 package soon.ready_action.global.config;
 
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,7 +21,8 @@ public class SwaggerConfig {
         return new OpenAPI()
             .info(getApiInfo())
             .addSecurityItem(getSecurityRequirement())
-            .components(getComponents());
+            .components(getComponents())
+            .servers(List.of(getLocalDevServer()));
     }
 
     private Info getApiInfo() {
@@ -46,5 +49,11 @@ public class SwaggerConfig {
             .scheme(BEARER_SCHEME)
             .bearerFormat(JWT)
             .description("AccessToken을 입력해주세요. 형식: Bearer {token}");
+    }
+
+    private Server getLocalDevServer() {
+        return new Server()
+            .description("Development Server")
+            .url("http://localhost:8080");
     }
 }
