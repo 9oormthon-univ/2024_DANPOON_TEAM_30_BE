@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import soon.ready_action.domain.auth.dto.response.AuthResponse;
+import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
 import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
@@ -31,6 +32,7 @@ public abstract class AuthDocsController {
     })
     @GetMapping("/oauth2/authorization/kakao")
     public void kakao() {
-
     }
+
+    public abstract ResponseEntity<TokenResponse> signup(MemberAdditionalInfoRequest request);
 }

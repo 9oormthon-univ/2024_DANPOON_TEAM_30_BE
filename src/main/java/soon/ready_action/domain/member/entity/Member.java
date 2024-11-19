@@ -54,4 +54,12 @@ public class Member {
     public boolean isEqualsRefreshToken(String refreshToken) {
         return this.refreshToken.equals(refreshToken);
     }
+
+    public void updateAdditionalInfo(String nickname, LocalDate birthday, String refreshToken,
+        Role role) {
+        this.nickname = nickname;
+        this.birthday = birthday;
+        this.refreshToken = refreshToken;
+        this.role = role;
+    }
 }
