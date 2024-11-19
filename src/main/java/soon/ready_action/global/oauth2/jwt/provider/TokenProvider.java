@@ -69,30 +69,27 @@ public class TokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
+            Claims claims = getClaimsFromToken(token);
+            isExpiredToken(claims);
+
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다. Token: {}", token);
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다. Token: {}", token);
+            log.error("Expired JWT, 만료된 JWT 입니다. Token: {}", token);
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다. Token: {}", token);
+            log.error("Unsupported JWT, 지원되지 않는 JWT 입니다. Token: {}", token);
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다. Token: {}", token);
+            log.error("JWT claims is empty, 잘못된 JWT 입니다. Token: {}", token);
         }
         return false;
     }
 
-    // 만료된 경우 true
-    public boolean isTokenExpired(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            return claims.getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
+    private void isExpiredToken(Claims claims) {
+        Date expiration = claims.getExpiration();
+
+        if (expiration.before(new Date())) {
+            throw new ExpiredJwtException(null, claims, "만료된 토큰입니다");
         }
     }
 
