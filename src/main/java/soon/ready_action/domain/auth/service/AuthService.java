@@ -31,6 +31,10 @@ public class AuthService {
             throw new JwtException("invalid refreshToken");
         }
 
-        return tokenProvider.reissueToken(memberId, member.getRole(), refreshToken);
+        TokenResponse tokenResponse = tokenProvider.reissueToken(memberId, member.getRole(),
+            refreshToken);
+        member.updateRefreshToken(tokenResponse.refreshToken());
+
+        return tokenResponse;
     }
 }
