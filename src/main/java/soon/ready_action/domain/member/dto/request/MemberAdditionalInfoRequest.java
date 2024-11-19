@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 import lombok.Builder;
 
 @Schema(description = "로그인 후 사용자의 추가 정보 입력")
@@ -21,9 +21,9 @@ public record MemberAdditionalInfoRequest(
     @PastOrPresent(message = "생년월일은 현재 날짜 이전이어야 합니다.")
     LocalDate birthday,
 
-    @Schema(description = "카테고리 활성 상태", example = "{\"건강\": true, \"금융\": false}")
+    @Schema(description = "카테고리 활성 상태", example = "['건강', '주거']")
     @NotNull(message = "카테고리는 한개 이상 선택되야 합니다.")
-    Map<String, Boolean> categories
+    List<String> categories
 ) {
 
 }

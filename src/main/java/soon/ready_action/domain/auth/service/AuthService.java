@@ -1,5 +1,7 @@
 package soon.ready_action.domain.auth.service;
 
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -9,6 +11,7 @@ import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.entity.Role;
 import soon.ready_action.domain.member.repository.MemberRepository;
+import soon.ready_action.domain.membercategory.service.MemberCategoryService;
 import soon.ready_action.global.exception.ForbiddenException;
 import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
 import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
@@ -21,6 +24,7 @@ public class AuthService {
 
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final MemberCategoryService memberCategoryService;
 
     @Transactional
     public TokenResponse reissueToken(ReissueTokenRequest request) {
@@ -61,6 +65,9 @@ public class AuthService {
             tokenResponse.refreshToken(),
             Role.ROLE_MEMBER
         );
+
+        List<String> categories = request.categories();
+        memberCategoryService.associateMemberWithCategories(categories, member);
 
         return tokenResponse;
     }
