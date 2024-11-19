@@ -34,5 +34,11 @@ public abstract class AuthDocsController {
     public void kakao() {
     }
 
+    @Operation(summary = "추가정보 입력", description = "추가정보 입력")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "추가 정보 입력 성공 시 권한이 바뀐 새로운 토큰 반환", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "400", description = "request 값이 잘못된 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public abstract ResponseEntity<TokenResponse> signup(MemberAdditionalInfoRequest request);
 }
