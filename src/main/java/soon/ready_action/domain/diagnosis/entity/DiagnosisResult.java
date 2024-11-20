@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import soon.ready_action.domain.member.entity.Member;
@@ -36,4 +37,11 @@ public class DiagnosisResult {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AnswerType answerType = AnswerType.NOT_SELECTED;
+
+    @Builder
+    public DiagnosisResult(Member member, DiagnosisQuestion question, AnswerType answerType) {
+        this.member = member;
+        this.question = question;
+        this.answerType = answerType;
+    }
 }

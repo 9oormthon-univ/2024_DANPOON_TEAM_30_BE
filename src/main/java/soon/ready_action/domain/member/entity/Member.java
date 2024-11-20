@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,32 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(nullable = false, unique = true)
+    private String kakaoId;
+
+    @Builder
+    public Member(String kakaoId) {
+        this.nickname = "";
+        this.birthday = LocalDate.now();
+        this.refreshToken = "";
+        this.role = Role.ROLE_GUEST;
+        this.kakaoId = kakaoId;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public boolean isEqualsRefreshToken(String refreshToken) {
+        return this.refreshToken.equals(refreshToken);
+    }
+
+    public void updateAdditionalInfo(String nickname, LocalDate birthday, String refreshToken,
+        Role role) {
+        this.nickname = nickname;
+        this.birthday = birthday;
+        this.refreshToken = refreshToken;
+        this.role = role;
+    }
 }
