@@ -12,12 +12,15 @@ import soon.ready_action.domain.diagnosis.service.DiagnosisService;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/diagnosis")
 @RestController
-public class DiagnosisController {
+public class DiagnosisController extends DiagnosisDocsController {
 
     private final DiagnosisService diagnosisService;
 
+    @Override
     @PostMapping
-    public ResponseEntity<Void> handleOnboardingDiagnosis(@RequestBody CategoryWithDiagnosisRequest request) {
+    public ResponseEntity<Void> handleOnboardingDiagnosis(
+        @RequestBody CategoryWithDiagnosisRequest request
+    ) {
         diagnosisService.saveOnboardingDiagnosisResults(request);
 
         return ResponseEntity.ok().build();
