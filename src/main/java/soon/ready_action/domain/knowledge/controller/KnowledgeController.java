@@ -26,7 +26,7 @@ public class KnowledgeController {
     @Operation(summary = "자립지식 전체 조회", description = "카테고리별 자립지식 전체 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = KnowledgeResponse.class))),
-            @ApiResponse(responseCode = "404", description = "경로가 잘못 됐습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
@@ -44,7 +44,7 @@ public class KnowledgeController {
     @Operation(summary = "자립지식 상세 조회", description = "하나의 자립지식 상세 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = KnowledgeResponse.class))),
-            @ApiResponse(responseCode = "404", description = "경로가 잘못 됐습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<DetailResponse> getKnowledgeById(@PathVariable Long knowledgeId) {
