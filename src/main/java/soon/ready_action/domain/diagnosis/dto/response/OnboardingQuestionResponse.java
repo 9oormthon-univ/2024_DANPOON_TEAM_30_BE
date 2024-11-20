@@ -7,6 +7,9 @@ import lombok.Builder;
 @Builder
 public record OnboardingQuestionResponse(
 
+    @Schema(description = "질문 번호", example = "1")
+    Long questionId,
+
     @Schema(description = "질문 내용", example = "정기적으로 신체적, 정신적 관리에 힘쓰며 미래 건강 관리를 위한 계획이 세워져있나요?")
     String content,
 

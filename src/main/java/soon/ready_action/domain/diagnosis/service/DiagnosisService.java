@@ -32,6 +32,7 @@ public class DiagnosisService {
         DiagnosisQuestion question = questionRepository.findByOnboardingQuestionForCategory(category);
 
         return OnboardingQuestionResponse.builder()
+            .questionId(question.getId())
             .category(category.getTitle())
             .content(question.getContent())
             .build();
