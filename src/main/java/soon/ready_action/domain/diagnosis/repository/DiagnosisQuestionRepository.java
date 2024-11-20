@@ -1,6 +1,8 @@
 package soon.ready_action.domain.diagnosis.repository;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +53,9 @@ public class DiagnosisQuestionRepository {
     public DiagnosisQuestion findByOnboardingQuestionForCategory(Category category) {
         return diagnosisQuestionJpaRepository.findByOnboardingQuestionForCategory(category)
             .orElseThrow(DiagnosisQuestionNotFoundException::new);
+    }
+
+    public List<DiagnosisQuestion> findAllById(Set<Long> ids) {
+        return diagnosisQuestionJpaRepository.findAllById(ids);
     }
 }
