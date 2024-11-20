@@ -53,6 +53,12 @@ public class ProgramController {
     }
 
     // 검색
+    @Operation(summary = "프로그램 검색", description = "검색어가 제목에 포함된 프로그램 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "검색 성공", content = @Content(schema = @Schema(implementation = ProgramSearchResponse.class))),
+            @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/search")
     public ResponseEntity<Object> searchPrograms(
             @RequestParam String keyword,
