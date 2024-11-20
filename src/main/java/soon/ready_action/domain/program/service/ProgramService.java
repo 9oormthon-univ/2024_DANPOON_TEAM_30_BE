@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import soon.ready_action.domain.program.dto.ProgramResponse;
+import soon.ready_action.domain.program.dto.ProgramSearchResponse;
 import soon.ready_action.domain.program.entity.Program;
 import soon.ready_action.domain.program.repository.ProgramRepository;
 
@@ -70,4 +71,45 @@ public class ProgramService {
                 program.getCategory().getTitle()
         );
     }
+
+    // 검색
+    @Transactional(readOnly = true)
+    public ProgramSearchResponse searchPrograms(String keyword, int size, Long lastProgramId) {
+        Pageable pageable = PageRequest.of(0, size);
+        List<Program> programs;
+
+        if (lastProgramId == null) {
+            // 첫 페이지인 경우
+            programs = programRepository.searchProgramsByTitle(keyword, pageable);
+        } else {
+            // 이후 페이지인 경우
+            programs = programRepository.searchProgramsByTitle(keyword, pageable).stream()
+                    .filter(program -> program.getId() < lastProgramId)
+                    .collect(Collectors.toList());
+        }
+
+        int totalElements = programRepository.countProgramsByTitle(keyword);
+
+        if (programs.isEmpty()) {
+            // 결과가 없는 경우
+            return new ProgramSearchResponse(List.of(), 0, false);
+        }
+
+        List<ProgramSearchResponse.SearchResult> searchResults = programs.stream()
+                .map(program -> new ProgramSearchResponse.SearchResult(
+                        program.getId(),
+                        program.getTitle(),
+                        program.getStartDate(),
+                        program.getEndDate(),
+                        program.getProgramStatus(),
+                        false, // 스크랩 여부: 실제 구현 필요
+                        program.getCategory().getTitle()
+                ))
+                .collect(Collectors.toList());
+
+        boolean hasNextPage = programs.size() == size;
+
+        return new ProgramSearchResponse(searchResults, totalElements, hasNextPage);
+    }
+
 }

@@ -9,8 +9,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import soon.ready_action.domain.program.dto.ProgramResponse;
+import soon.ready_action.domain.program.dto.ProgramSearchResponse;
 import soon.ready_action.domain.program.service.ProgramService;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,4 +51,25 @@ public class ProgramController {
         ProgramResponse.DetailResponse detailResponse = programService.getProgramById(programId);
         return ResponseEntity.ok(detailResponse);
     }
+
+    // 검색
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchPrograms(
+            @RequestParam String keyword,
+            @RequestParam int size,
+            @RequestParam(required = false) Long lastProgramId
+    ) {
+        ProgramSearchResponse response = programService.searchPrograms(keyword, size, lastProgramId);
+
+        if (response.getData().isEmpty()) {
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message", "일치하는 프로그램이 없습니다."
+                    )
+            );
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
 }
