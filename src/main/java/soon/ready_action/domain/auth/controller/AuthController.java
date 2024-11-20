@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
 import soon.ready_action.domain.auth.service.AuthService;
 import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
@@ -29,9 +30,9 @@ public class AuthController extends AuthDocsController {
 
     @Override
     @PutMapping("/signup")
-    public ResponseEntity<TokenResponse> signup(@RequestBody MemberAdditionalInfoRequest request) {
-        TokenResponse tokenResponse = authService.signup(request);
+    public ResponseEntity<OnboardingWrapperResponse> signup(@RequestBody MemberAdditionalInfoRequest request) {
+        OnboardingWrapperResponse onboardingWrapperResponse = authService.signup(request);
 
-        return ResponseEntity.ok(tokenResponse);
+        return ResponseEntity.ok(onboardingWrapperResponse);
     }
 }

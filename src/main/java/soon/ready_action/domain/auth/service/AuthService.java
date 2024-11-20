@@ -1,12 +1,14 @@
 package soon.ready_action.domain.auth.service;
 
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
+import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
+import soon.ready_action.domain.diagnosis.service.DiagnosisService;
 import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.entity.Role;
@@ -25,6 +27,7 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final MemberCategoryService memberCategoryService;
+    private final DiagnosisService diagnosisService;
 
     @Transactional
     public TokenResponse reissueToken(ReissueTokenRequest request) {
@@ -47,7 +50,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenResponse signup(MemberAdditionalInfoRequest request) {
+    public OnboardingWrapperResponse signup(MemberAdditionalInfoRequest request) {
         Long loginMemberId = TokenService.getLoginMemberId();
         Member member = memberRepository.findById(loginMemberId);
 
@@ -69,6 +72,12 @@ public class AuthService {
         List<String> categories = request.categories();
         memberCategoryService.associateMemberWithCategories(categories, member);
 
-        return tokenResponse;
+        List<OnboardingQuestionResponse> onboardingQuestionResponseByCategories = diagnosisService
+            .getOnboardingQuestionResponseByCategories(categories);
+
+        return OnboardingWrapperResponse.builder()
+            .tokenResponse(tokenResponse)
+            .onboardingQuestionResponse(onboardingQuestionResponseByCategories)
+            .build();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
 import soon.ready_action.domain.diagnosis.repository.jpa.diagnosisQuestionJpaRepository;
+import soon.ready_action.global.exception.DiagnosisQuestionNotFoundException;
 
 @RequiredArgsConstructor
 @Repository
@@ -45,5 +46,10 @@ public class DiagnosisQuestionRepository {
 
             diagnosisQuestionJpaRepository.save(question);
         }
+    }
+
+    public DiagnosisQuestion findByOnboardingQuestionForCategory(Category category) {
+        return diagnosisQuestionJpaRepository.findByOnboardingQuestionForCategory(category)
+            .orElseThrow(DiagnosisQuestionNotFoundException::new);
     }
 }

@@ -25,4 +25,8 @@ public class CategoryRepository {
             CategoryNotFoundException::new
         );
     }
+
+    public List<Category> findCategoriesByTitles(List<String> titles) {
+        return categoryJpaRepository.findAllByTitles(titles);
+    }
 }
