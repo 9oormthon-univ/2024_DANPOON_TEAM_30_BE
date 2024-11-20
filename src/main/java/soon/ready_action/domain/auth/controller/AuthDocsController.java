@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import soon.ready_action.domain.auth.dto.response.AuthResponse;
+import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
+import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
 import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
@@ -31,6 +33,13 @@ public abstract class AuthDocsController {
     })
     @GetMapping("/oauth2/authorization/kakao")
     public void kakao() {
-
     }
+
+    @Operation(summary = "추가정보 입력", description = "추가정보 입력")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "추가 정보 입력 성공 시 권한이 바뀐 새로운 토큰 반환 및 관심카테고리에 따른 질문 응답", content = @Content(schema = @Schema(implementation = OnboardingWrapperResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "400", description = "request 값이 잘못된 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public abstract ResponseEntity<OnboardingWrapperResponse> signup(MemberAdditionalInfoRequest request);
 }

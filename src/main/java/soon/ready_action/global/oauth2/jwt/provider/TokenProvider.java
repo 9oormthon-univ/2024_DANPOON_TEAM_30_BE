@@ -6,7 +6,6 @@ import static soon.ready_action.global.oauth2.jwt.common.TokenType.AUTHORIZATION
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

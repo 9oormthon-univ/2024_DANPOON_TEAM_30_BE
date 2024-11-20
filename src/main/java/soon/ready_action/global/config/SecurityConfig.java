@@ -48,7 +48,7 @@ public class SecurityConfig {
                         "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue", "/swagger-ui/**",
                         "/v3/api-docs/**"
                     ).permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/signup").hasAuthority("ROLE_GUEST")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/auth/signup").hasAuthority("ROLE_GUEST")
                     .anyRequest().authenticated();
             });
 

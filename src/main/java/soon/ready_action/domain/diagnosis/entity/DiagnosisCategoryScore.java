@@ -12,29 +12,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class DiagnosisScore {
+public class DiagnosisCategoryScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diagnosis_score_id")
+    @Column(name = "diagnosis_category_score_id")
     private Long id;
 
     @Column(nullable = false)
     private Long memberId;
 
     @Column(nullable = false)
-    private int healthScore = 0;
+    private Long categoryId;
 
     @Column(nullable = false)
-    private int residenceScore = 0;
-
-    @Column(nullable = false)
-    private int educationScore = 0;
-
-    @Column(nullable = false)
-    private int financeScore = 0;
-
-    @Column(nullable = false)
-    private int employmentScore = 0;
+    private int score = 0;
 
 }

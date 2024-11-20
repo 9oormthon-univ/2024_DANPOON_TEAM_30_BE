@@ -1,6 +1,8 @@
 package soon.ready_action.global.oauth2.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.member.entity.Role;
@@ -27,5 +29,10 @@ public class TokenService {
         memberService.updateRefreshToken(refreshToken, memberId);
 
         return tokenResponse;
+    }
+
+    public static Long getLoginMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return Long.valueOf(authentication.getPrincipal().toString());
     }
 }
