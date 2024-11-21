@@ -18,14 +18,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
       - name: gradlew에 권한 부여
         run: chmod +x ./gradlew
 
       - name: Make application.properties
         run: |
           cd ./src/main/resources
-          touch ./application-main.yml
-          echo "${{ secrets.YML }}" >> ./application-main.yml
+          touch ./application.yml
+          echo "${{ secrets.YML }}" > ./application.yml
         shell: bash
 
       - name: 빌드
@@ -36,6 +37,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/ready-action:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/ready-action:latest
+
       - name: AWS 배포
         uses: appleboy/ssh-action@master
         with:
