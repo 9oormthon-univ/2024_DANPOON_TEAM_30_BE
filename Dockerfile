@@ -1,4 +1,6 @@
 FROM openjdk:17
 ARG JAR_FILE=build/libs/ready_action-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jpar"]
+COPY src/main/resources/application.yml /app/application.yml
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
