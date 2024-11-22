@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 
-@Schema(description = "온보딩 질문 제출")
+@Schema(description = "자가진단 질문 제출")
 public record CategoryWithDiagnosisRequest(
 
     @Schema(description = "선택한 질문의 응답/ min=1, max=5", required = true, example = "{1:true, 2:false, 3:true}")
