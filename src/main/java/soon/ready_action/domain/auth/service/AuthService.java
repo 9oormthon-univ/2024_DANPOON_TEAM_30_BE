@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
 import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
-import soon.ready_action.domain.diagnosis.service.DiagnosisService;
+import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
 import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.entity.Role;
@@ -27,7 +27,7 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final MemberCategoryService memberCategoryService;
-    private final DiagnosisService diagnosisService;
+    private final DiagnosisQuestionService questionService;
 
     @Transactional
     public TokenResponse reissueToken(ReissueTokenRequest request) {
@@ -72,7 +72,7 @@ public class AuthService {
         List<String> categories = request.categories();
         memberCategoryService.associateMemberWithCategories(categories, member);
 
-        List<OnboardingQuestionResponse> onboardingQuestionResponseByCategories = diagnosisService
+        List<OnboardingQuestionResponse> onboardingQuestionResponseByCategories = questionService
             .getOnboardingQuestionResponseByCategories(categories);
 
         return OnboardingWrapperResponse.builder()

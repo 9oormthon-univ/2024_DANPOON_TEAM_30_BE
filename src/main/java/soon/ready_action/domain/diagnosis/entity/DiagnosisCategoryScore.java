@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,14 @@ public class DiagnosisCategoryScore {
     @Column(nullable = false)
     private int score = 0;
 
+    @Builder
+    public DiagnosisCategoryScore(Long memberId, Long categoryId, int score) {
+        this.memberId = memberId;
+        this.categoryId = categoryId;
+        this.score = score;
+    }
+
+    public void updateScore(int score) {
+        this.score = score;
+    }
 }
