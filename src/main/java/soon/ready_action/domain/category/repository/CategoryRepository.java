@@ -29,4 +29,8 @@ public class CategoryRepository {
     public List<Category> findCategoriesByTitles(List<String> titles) {
         return categoryJpaRepository.findAllByTitles(titles);
     }
+
+    public List<Category> findAll() {
+        return categoryJpaRepository.findAll();
+    }
 }

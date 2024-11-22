@@ -1,21 +1,26 @@
 package soon.ready_action.domain.diagnosis.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
+import soon.ready_action.domain.diagnosis.dto.CalculateDiagnosisResult;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
 import soon.ready_action.domain.diagnosis.entity.AnswerType;
+import soon.ready_action.domain.diagnosis.entity.DiagnosisCategoryScore;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisResult;
+import soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository;
 import soon.ready_action.domain.diagnosis.repository.DiagnosisQuestionRepository;
 import soon.ready_action.domain.diagnosis.repository.DiagnosisResultRepository;
 import soon.ready_action.domain.member.entity.Member;
@@ -29,6 +34,7 @@ public class DiagnosisService {
 
     private final DiagnosisQuestionRepository questionRepository;
     private final DiagnosisResultRepository resultRepository;
+    private final DiagnosisCategoryScoreRepository scoreRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
 
@@ -68,6 +74,61 @@ public class DiagnosisService {
             .toList();
 
         resultRepository.saveAll(results);
+
+        saveDiagnosisResults();
+    }
+
+    @Transactional
+    public void saveDiagnosisResults() {
+        Long loginMemberId = TokenService.getLoginMemberId();
+        List<Category> categories = categoryRepository.findAll();
+
+        Map<String, Category> categoryMap = categories.stream()
+            .collect(Collectors.toMap(Category::getTitle, category -> category));
+
+        List<CalculateDiagnosisResult> calculateDiagnosisResults = calculateScore(
+            categories, loginMemberId
+        );
+
+        List<DiagnosisCategoryScore> scores = calculateDiagnosisResults.stream()
+            .filter(result -> result.score() > 8)
+            .map(result -> {
+                Category category = categoryMap.get(result.categoryTitle());
+
+                return DiagnosisCategoryScore.builder()
+                    .score(result.score())
+                    .categoryId(category.getId())
+                    .memberId(loginMemberId)
+                    .build();
+            })
+            .toList();
+
+        scoreRepository.saveAll(scores);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CalculateDiagnosisResult> calculateScore(
+        List<Category> categories, Long memberId
+    ) {
+        List<CalculateDiagnosisResult> results = new ArrayList<>();
+
+        categories.forEach(category -> {
+            List<DiagnosisResult> resultsByCategory = resultRepository
+                .findDiagnosisResultsByMemberAndCategoryAndAnswerType(
+                    memberId, category.getTitle()
+                );
+
+            int count = resultsByCategory.size();
+
+            results.add(
+                CalculateDiagnosisResult.builder()
+                    .score(count)
+                    .categoryTitle(category.getTitle())
+                    .build()
+            );
+        });
+
+        return results;
     }
 
     public DiagnosisQuestionPaginationResponseWrapper getPagedDiagnosisQuestion(
