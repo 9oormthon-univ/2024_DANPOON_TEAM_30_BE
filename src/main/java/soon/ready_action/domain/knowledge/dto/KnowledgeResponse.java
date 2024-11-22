@@ -9,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class KnowledgeResponse {
 
+    private String categoryTitle;
     private List<KnowledgeContent> contents;
     private int totalElements;
     private Long nextCursor;
@@ -27,5 +28,6 @@ public class KnowledgeResponse {
         private Long id;
         private String title;
         private String content;
+        private String categoryTitle;
     }
 }
