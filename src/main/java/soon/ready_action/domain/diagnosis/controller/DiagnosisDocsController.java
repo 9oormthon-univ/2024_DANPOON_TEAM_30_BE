@@ -15,15 +15,6 @@ import soon.ready_action.global.exception.dto.response.ErrorResponse;
 @Tag(name = "Diagnosis Controller", description = "Diagnosis API")
 public abstract class DiagnosisDocsController {
 
-    @Operation(summary = "온보딩 질문 제출", description = "선택한 질문의 응답 제출")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "void"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    public abstract ResponseEntity<Void> handleOnboardingDiagnosis(
-        CategoryWithDiagnosisRequest request
-    );
-
     @Operation(summary = "질문 페이징 조회", description = "질문 페이징 조회")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "DiagnosisQuestionPaginationResponseWrapper", content = @Content(schema = @Schema(implementation = DiagnosisQuestionPaginationResponseWrapper.class))),

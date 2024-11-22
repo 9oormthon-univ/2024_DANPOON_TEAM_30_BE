@@ -30,8 +30,11 @@ public class DiagnosisQuestionPaginationRepositoryImpl implements
                     category.title.as("category"),
                     Expressions.stringTemplate("function('str', {0})", diagnosisQuestion.content)
                         .as("question"),
-                    Expressions.stringTemplate("function('str', {0})", diagnosisResult.answerType)
-                        .as("answerType")
+                        Expressions.booleanTemplate(
+                            "CASE WHEN {0} = 'O_SELECTED' THEN true " +
+                                "WHEN {0} = 'X_SELECTED' THEN false ELSE null END",
+                            diagnosisResult.answerType.stringValue()
+                        ).as("answerType")
                 )
             )
             .from(diagnosisQuestion)

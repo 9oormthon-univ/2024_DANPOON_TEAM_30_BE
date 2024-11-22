@@ -17,7 +17,7 @@ public record DiagnosisQuestionResponse(
     String question,
 
     @Schema(description = "질문 타입", example = "null | true | false")
-    String answerType
+    Boolean answerType
 
 ) {
 
