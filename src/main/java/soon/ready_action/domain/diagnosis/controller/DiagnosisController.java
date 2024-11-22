@@ -10,41 +10,33 @@ import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
-import soon.ready_action.domain.diagnosis.service.DiagnosisService;
+import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
+import soon.ready_action.domain.diagnosis.service.DiagnosisResultService;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/diagnosis")
 @RestController
 public class DiagnosisController extends DiagnosisDocsController {
 
-    private final DiagnosisService diagnosisService;
-
-    @Override
-    @PostMapping
-    public ResponseEntity<Void> handleOnboardingDiagnosis(
-        @RequestBody CategoryWithDiagnosisRequest request
-    ) {
-        diagnosisService.saveDiagnosisResults(request);
-
-        return ResponseEntity.ok().build();
-    }
+    private final DiagnosisResultService resultService;
+    private final DiagnosisQuestionService questionService;
 
     @Override
     @GetMapping("/questions")
     public ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
         @RequestBody DiagnosisQuestionPaginationRequest request
     ) {
-        var wrapper = diagnosisService.getPagedDiagnosisQuestion(request);
+        var wrapper = questionService.getPagedDiagnosisQuestion(request);
 
         return ResponseEntity.ok(wrapper);
     }
 
     @Override
-    @PostMapping("/questions")
+    @PostMapping
     public ResponseEntity<Void> handleDiagnosisQuestion(
         @RequestBody CategoryWithDiagnosisRequest request
     ) {
-        diagnosisService.saveDiagnosisResults(request);
+        resultService.saveDiagnosisResults(request);
 
         return ResponseEntity.ok().build();
     }
