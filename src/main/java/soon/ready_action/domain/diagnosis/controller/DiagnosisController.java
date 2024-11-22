@@ -2,6 +2,7 @@ package soon.ready_action.domain.diagnosis.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,13 @@ public class DiagnosisController extends DiagnosisDocsController {
         @RequestBody CategoryWithDiagnosisRequest request
     ) {
         diagnosisService.saveOnboardingDiagnosisResults(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+//    @Override
+    @GetMapping
+    public ResponseEntity<Void> handleDiagnosisQuestion() {
 
         return ResponseEntity.ok().build();
     }

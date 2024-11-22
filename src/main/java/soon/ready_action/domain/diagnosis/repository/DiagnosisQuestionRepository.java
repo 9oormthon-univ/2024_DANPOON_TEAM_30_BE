@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
-import soon.ready_action.domain.diagnosis.repository.jpa.diagnosisQuestionJpaRepository;
+import soon.ready_action.domain.diagnosis.repository.jpa.DiagnosisQuestionJpaRepository;
 import soon.ready_action.global.exception.DiagnosisQuestionNotFoundException;
 
 @RequiredArgsConstructor
 @Repository
 public class DiagnosisQuestionRepository {
 
-    private final diagnosisQuestionJpaRepository diagnosisQuestionJpaRepository;
+    private final DiagnosisQuestionJpaRepository diagnosisQuestionJpaRepository;
 
     public long count() {
         return diagnosisQuestionJpaRepository.count();
