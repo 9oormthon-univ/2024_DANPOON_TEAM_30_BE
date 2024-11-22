@@ -32,4 +32,7 @@ public abstract class DiagnosisDocsController {
     public abstract ResponseEntity<Void> handleDiagnosisQuestion(
         CategoryWithDiagnosisRequest request
     );
+
+    @Operation(summary = "진단 결과 조회", description = "진단 결과 조회")
+    public abstract ResponseEntity<?> handleDiagnosisResult();
 }

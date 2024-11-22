@@ -40,4 +40,12 @@ public class DiagnosisController extends DiagnosisDocsController {
 
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    @GetMapping("/result")
+    public ResponseEntity<?> handleDiagnosisResult() {
+        resultService.getDiagnosisResult();
+
+        return null;
+    }
 }

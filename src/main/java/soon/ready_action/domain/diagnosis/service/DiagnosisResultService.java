@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soon.ready_action.domain.badge.entity.BadgeType;
 import soon.ready_action.domain.badge.service.BadgeService;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.entity.AnswerType;
@@ -85,5 +86,10 @@ public class DiagnosisResultService {
             .member(member)
             .answerType(AnswerType.from(answer))
             .build();
+    }
+
+    public void getDiagnosisResult() {
+        Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
+
     }
 }
