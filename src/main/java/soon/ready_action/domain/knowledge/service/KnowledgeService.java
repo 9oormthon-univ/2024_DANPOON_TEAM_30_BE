@@ -42,9 +42,12 @@ public class KnowledgeService {
                 ))
                 .collect(Collectors.toList());
 
+        // 카테고리 타이틀
+        String categoryTitle = knowledgeList.isEmpty() ? "" : knowledgeList.get(0).getCategory().getTitle();
+
         Long nextCursor = knowledgeList.size() < size ? -1 : knowledgeList.get(knowledgeList.size() - 1).getId();
 
-        return new KnowledgeResponse(contents, knowledgeList.size(), nextCursor);
+        return new KnowledgeResponse(categoryTitle, contents, knowledgeList.size(), nextCursor);
     }
 
 
@@ -57,7 +60,8 @@ public class KnowledgeService {
         return new DetailResponse(
                 knowledge.getId(),
                 knowledge.getTitle(),
-                knowledge.getContent()
+                knowledge.getContent(),
+                knowledge.getCategory().getTitle()
         );
     }
 }

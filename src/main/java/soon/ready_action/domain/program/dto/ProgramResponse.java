@@ -1,0 +1,40 @@
+package soon.ready_action.domain.program.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import soon.ready_action.domain.program.entity.ProgramStatus;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+public class ProgramResponse {
+
+    private List<ProgramContent> contents;
+    private String categoryTitle;
+    private boolean hasNextPage;
+
+    @Data
+    @AllArgsConstructor
+    public static class ProgramContent {
+        private Long id;
+        private String title;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private ProgramStatus status;
+        private String applicationUrl;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class DetailResponse {
+        private Long id;
+        private String title;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private ProgramStatus status;
+        private String applicationUrl;
+        private String categoryTitle;
+    }
+}
