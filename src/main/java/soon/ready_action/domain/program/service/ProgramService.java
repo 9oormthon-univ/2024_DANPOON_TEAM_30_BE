@@ -22,6 +22,7 @@ public class ProgramService {
     private final ProgramRepository programRepository;
     private final ScrapService scrapService;
 
+    // 전체 조회
     @Transactional(readOnly = true)
     public ProgramResponse getProgramsByCategory(Long categoryId, int size, Long lastProgramId) {
         List<Program> programs;
@@ -56,6 +57,7 @@ public class ProgramService {
         return new ProgramResponse(programContents, categoryTitle, hasNextPage);
     }
 
+    // 상세 조회
     @Transactional(readOnly = true)
     public ProgramResponse.DetailResponse getProgramById(Long programId) {
         Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
@@ -78,19 +80,13 @@ public class ProgramService {
         );
     }
 
+    // 검색
     @Transactional(readOnly = true)
     public ProgramSearchResponse searchPrograms(String keyword, int size, Long lastProgramId) {
-        Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
+        Long memberId = TokenService.getLoginMemberId(); // JWT에서 로그인된 회원 ID 추출
 
         Pageable pageable = PageRequest.of(0, size);
-        List<Program> programs;
-        if (lastProgramId == null) {
-            programs = programRepository.searchProgramsByTitle(keyword, pageable);
-        } else {
-            programs = programRepository.searchProgramsByTitle(keyword, pageable).stream()
-                    .filter(program -> program.getId() < lastProgramId)
-                    .collect(Collectors.toList());
-        }
+        List<Program> programs = programRepository.searchProgramsByTitleWithLastProgramId(keyword, lastProgramId, pageable);
 
         // 사용자가 스크랩한 프로그램 ID 조회
         List<Long> scrappedProgramIds = scrapService.getScrappedProgramIds(memberId);
