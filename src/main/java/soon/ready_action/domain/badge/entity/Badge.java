@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import soon.ready_action.domain.member.entity.Member;
@@ -32,4 +33,10 @@ public class Badge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @Builder
+    public Badge(BadgeType type, Member member) {
+        this.type = type;
+        this.member = member;
+    }
 }
