@@ -17,6 +17,7 @@ import soon.ready_action.domain.diagnosis.repository.DiagnosisQuestionRepository
 import soon.ready_action.domain.diagnosis.repository.DiagnosisResultRepository;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
+import soon.ready_action.domain.member.service.MemberService;
 import soon.ready_action.global.oauth2.service.TokenService;
 
 @Slf4j
@@ -41,8 +42,10 @@ public class DiagnosisResultService {
         );
 
         resultRepository.saveAll(results);
-        scoreService.calculateAndSaveDiagnosisScores(loginMember.getId());
+
+        int totalScore = scoreService.calculateAndSaveDiagnosisScores(loginMember.getId());
         badgeService.awardBadgesForStandardScores(loginMember);
+        loginMember.updateCharacterType(totalScore);
     }
 
     private List<DiagnosisResult> processDiagnosisResults(
