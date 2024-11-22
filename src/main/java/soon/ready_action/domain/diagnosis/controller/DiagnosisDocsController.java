@@ -32,4 +32,8 @@ public abstract class DiagnosisDocsController {
     public abstract ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
         DiagnosisQuestionPaginationRequest request
     );
+
+    public abstract ResponseEntity<Void> handleDiagnosisQuestion(
+        CategoryWithDiagnosisRequest request
+    );
 }

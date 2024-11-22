@@ -54,7 +54,7 @@ public class DiagnosisService {
     }
 
     @Transactional
-    public void saveOnboardingDiagnosisResults(CategoryWithDiagnosisRequest request) {
+    public void saveDiagnosisResults(CategoryWithDiagnosisRequest request) {
         Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
 
         Map<Long, Boolean> questionResult = request.questionResult();

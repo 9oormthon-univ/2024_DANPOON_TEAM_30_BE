@@ -24,7 +24,7 @@ public class DiagnosisController extends DiagnosisDocsController {
     public ResponseEntity<Void> handleOnboardingDiagnosis(
         @RequestBody CategoryWithDiagnosisRequest request
     ) {
-        diagnosisService.saveOnboardingDiagnosisResults(request);
+        diagnosisService.saveDiagnosisResults(request);
 
         return ResponseEntity.ok().build();
     }
@@ -37,5 +37,15 @@ public class DiagnosisController extends DiagnosisDocsController {
         var wrapper = diagnosisService.getPagedDiagnosisQuestion(request);
 
         return ResponseEntity.ok(wrapper);
+    }
+
+    @Override
+    @PostMapping("/questions")
+    public ResponseEntity<Void> handleDiagnosisQuestion(
+        @RequestBody CategoryWithDiagnosisRequest request
+    ) {
+        diagnosisService.saveDiagnosisResults(request);
+
+        return ResponseEntity.ok().build();
     }
 }
