@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
+import soon.ready_action.domain.program.dto.response.ScrapProgramResponse;
 import soon.ready_action.domain.program.entity.Program;
 import soon.ready_action.domain.program.repository.ProgramRepository;
 import soon.ready_action.domain.scrap.entity.Scrap;
@@ -78,5 +79,36 @@ public class ScrapService {
         return scrapRepository.findByMemberId(memberId).stream()
                 .map(scrap -> scrap.getProgram().getId())
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ScrapProgramResponse getScrappedPrograms(int size, Long lastProgramId) {
+        Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
+
+        Pageable pageable = PageRequest.of(0, size);
+        List<Scrap> scraps;
+        if (lastProgramId == null) {
+            scraps = scrapRepository.findByMemberId(memberId);
+        } else {
+            scraps = scrapRepository.findByMemberId(memberId).stream()
+                    .filter(scrap -> scrap.getProgram().getId() < lastProgramId)
+                    .collect(Collectors.toList());
+        }
+
+        List<ScrapProgramResponse.ScrapProgramSearchResult> result = scraps.stream()
+                .map(scrap -> new ScrapProgramResponse.ScrapProgramSearchResult(
+                        scrap.getProgram().getId(),
+                        scrap.getProgram().getTitle(),
+                        scrap.getProgram().getStartDate(),
+                        scrap.getProgram().getEndDate(),
+                        scrap.getProgram().getProgramStatus(),
+                        scrap.getProgram().getCategory().getTitle(),
+                        true // 스크랩 여부는 항상 true
+                ))
+                .collect(Collectors.toList());
+
+        boolean hasNextPage = scraps.size() == size;
+
+        return new ScrapProgramResponse(result, scraps.size(), hasNextPage);
     }
 }
