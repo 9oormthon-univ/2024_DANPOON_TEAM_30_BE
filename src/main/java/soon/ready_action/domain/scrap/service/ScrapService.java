@@ -1,9 +1,6 @@
 package soon.ready_action.domain.scrap.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -83,19 +80,18 @@ public class ScrapService {
 
     @Transactional(readOnly = true)
     public ScrapProgramResponse getScrappedPrograms(int size, Long lastProgramId) {
-        Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
+        Long memberId = TokenService.getLoginMemberId();
 
-        Pageable pageable = PageRequest.of(0, size);
-        List<Scrap> scraps;
+        Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "program.id"));
+        Page<Scrap> scrapPage;
+
         if (lastProgramId == null) {
-            scraps = scrapRepository.findByMemberId(memberId);
+            scrapPage = scrapRepository.findByMemberId(memberId, pageable);
         } else {
-            scraps = scrapRepository.findByMemberId(memberId).stream()
-                    .filter(scrap -> scrap.getProgram().getId() < lastProgramId)
-                    .collect(Collectors.toList());
+            scrapPage = scrapRepository.findByMemberIdAndProgramIdLessThan(memberId, lastProgramId, pageable);
         }
 
-        List<ScrapProgramResponse.ScrapProgramSearchResult> result = scraps.stream()
+        List<ScrapProgramResponse.ScrapProgramSearchResult> result = scrapPage.getContent().stream()
                 .map(scrap -> new ScrapProgramResponse.ScrapProgramSearchResult(
                         scrap.getProgram().getId(),
                         scrap.getProgram().getTitle(),
@@ -107,8 +103,9 @@ public class ScrapService {
                 ))
                 .collect(Collectors.toList());
 
-        boolean hasNextPage = scraps.size() == size;
+        boolean hasNextPage = scrapPage.hasNext();
 
-        return new ScrapProgramResponse(result, scraps.size(), hasNextPage);
+        return new ScrapProgramResponse(result, scrapPage.getNumberOfElements(), hasNextPage);
     }
+
 }

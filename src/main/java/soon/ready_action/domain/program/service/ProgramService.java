@@ -102,7 +102,7 @@ public class ProgramService {
                         program.getStartDate(),
                         program.getEndDate(),
                         program.getProgramStatus(),
-                        scrappedProgramIds.contains(program.getId()), // 스크랩 여부
+                        scrappedProgramIds.contains(program.getId()),
                         program.getCategory().getTitle()
                 ))
                 .collect(Collectors.toList());

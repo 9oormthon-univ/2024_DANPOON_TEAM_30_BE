@@ -81,6 +81,7 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    // 스크랩
     @Operation(summary = "프로그램 스크랩", description = "프로그램을 스크랩")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "스크랩 성공"),
@@ -97,6 +98,7 @@ public class ProgramController {
         }
     }
 
+    // 스크랩 취소
     @Operation(summary = "프로그램 스크랩 취소", description = "프로그램 스크랩을 취소")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "스크랩 취소 성공"),
