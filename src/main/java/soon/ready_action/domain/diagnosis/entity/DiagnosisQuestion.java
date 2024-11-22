@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import soon.ready_action.domain.category.entity.Category;
@@ -29,4 +30,19 @@ public class DiagnosisQuestion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Column(nullable = false)
+    private boolean isOnboardingQuestion;
+
+    @Column(nullable = false)
+    private boolean isOnboardingRelation;
+
+    @Builder
+    public DiagnosisQuestion(String content, Category category, boolean isOnboardingQuestion,
+        boolean isOnboardingRelation) {
+        this.content = content;
+        this.category = category;
+        this.isOnboardingQuestion = isOnboardingQuestion;
+        this.isOnboardingRelation = isOnboardingRelation;
+    }
 }

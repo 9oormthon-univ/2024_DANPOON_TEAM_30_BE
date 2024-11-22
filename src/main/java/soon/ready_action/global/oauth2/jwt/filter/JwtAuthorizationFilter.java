@@ -15,12 +15,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import soon.ready_action.global.exception.dto.response.ErrorResponse;
+import soon.ready_action.global.exception.enums.ErrorCode;
 import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
+import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
+    private final CustomObjectMapperProvider customObjectMapperProvider;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -38,15 +42,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return exemptPaths.stream().anyMatch(exemptPath -> antPathMatcher.match(exemptPath, path));
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
         String tokenFromHeader = getTokenFromHeader(request);
 
         if (tokenFromHeader == null || !tokenProvider.validateToken(tokenFromHeader)) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized");
+
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(HttpServletResponse.SC_UNAUTHORIZED)
+                .message(ErrorCode.INVALID_TOKEN.getMessage())
+                .build();
+
+            response.getWriter()
+                .write(customObjectMapperProvider.writeValueAsString(errorResponse));
             return;
         }
 
