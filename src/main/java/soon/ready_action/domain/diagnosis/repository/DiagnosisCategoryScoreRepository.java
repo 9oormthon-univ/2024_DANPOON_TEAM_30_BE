@@ -10,6 +10,8 @@ import soon.ready_action.domain.diagnosis.repository.jpa.DiagnosisCategoryScoreJ
 @Repository
 public class DiagnosisCategoryScoreRepository {
 
+    public static final int STANDARD_SCORE = 8;
+
     private final DiagnosisCategoryScoreJpaRepository jpaRepository;
 
     public void save(DiagnosisCategoryScore diagnosisCategoryScore) {

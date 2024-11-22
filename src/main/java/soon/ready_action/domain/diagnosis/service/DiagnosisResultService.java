@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soon.ready_action.domain.badge.service.BadgeService;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.entity.AnswerType;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
@@ -26,6 +27,7 @@ public class DiagnosisResultService {
     private final DiagnosisQuestionRepository questionRepository;
     private final DiagnosisScoreService scoreService;
     private final MemberRepository memberRepository;
+    private final BadgeService badgeService;
 
     @Transactional
     public void saveDiagnosisResults(CategoryWithDiagnosisRequest request) {
@@ -39,6 +41,7 @@ public class DiagnosisResultService {
 
         resultRepository.saveAll(results);
         scoreService.calculateAndSaveDiagnosisScores(loginMember.getId());
+        badgeService.awardBadgesForStandardScores(loginMember);
     }
 
     private List<DiagnosisResult> processDiagnosisResults(
