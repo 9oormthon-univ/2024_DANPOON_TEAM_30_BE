@@ -64,25 +64,54 @@ public class DiagnosisService {
         Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
 
         Map<Long, Boolean> questionResult = request.questionResult();
-
         List<DiagnosisQuestion> questions = questionRepository.findAllById(questionResult.keySet());
 
-        List<DiagnosisResult> results = questions.stream()
-            .map(question -> createDiagnosisResult(
-                question, loginMember, questionResult.get(question.getId()))
-            )
-            .toList();
+        List<DiagnosisResult> results = processDiagnosisResults(
+            questions, loginMember, questionResult
+        );
 
         resultRepository.saveAll(results);
+        CalculateAndSaveDiagnosisScores();
+    }
 
-        saveDiagnosisResults();
+    private List<DiagnosisResult> processDiagnosisResults(
+        List<DiagnosisQuestion> questions,
+        Member loginMember,
+        Map<Long, Boolean> questionResult
+    ) {
+        Map<Long, DiagnosisResult> existingResults = resultRepository.findByMemberAndQuestions(
+                questions, loginMember
+            ).stream()
+            .collect(Collectors.toMap(
+                result -> result.getQuestion().getId(),
+                result -> result
+            ));
+
+        return questions.stream()
+            .map(question -> updateOrCreateDiagnosisResult(
+                loginMember, questionResult, question, existingResults
+            )).toList();
+    }
+
+    private DiagnosisResult updateOrCreateDiagnosisResult(
+        Member loginMember,
+        Map<Long, Boolean> questionResult, DiagnosisQuestion question,
+        Map<Long, DiagnosisResult> existingResults
+    ) {
+        DiagnosisResult result = existingResults.get(question.getId());
+        if (result != null) {
+            result.updateAnswerType(AnswerType.from(questionResult.get(question.getId())));
+            return result;
+        } else {
+            return createDiagnosisResult(question, loginMember,
+                questionResult.get(question.getId()));
+        }
     }
 
     @Transactional
-    public void saveDiagnosisResults() {
+    public void CalculateAndSaveDiagnosisScores() {
         Long loginMemberId = TokenService.getLoginMemberId();
         List<Category> categories = categoryRepository.findAll();
-
         Map<String, Category> categoryMap = categories.stream()
             .collect(Collectors.toMap(Category::getTitle, category -> category));
 
@@ -90,20 +119,16 @@ public class DiagnosisService {
             categories, loginMemberId
         );
 
-        List<DiagnosisCategoryScore> scores = calculateDiagnosisResults.stream()
-            .filter(result -> result.score() > 8)
-            .map(result -> {
-                Category category = categoryMap.get(result.categoryTitle());
+        List<DiagnosisCategoryScore> existingScores = scoreRepository.findByMemberId(loginMemberId);
 
-                return DiagnosisCategoryScore.builder()
-                    .score(result.score())
-                    .categoryId(category.getId())
-                    .memberId(loginMemberId)
-                    .build();
-            })
-            .toList();
+        Map<Long, DiagnosisCategoryScore> existingScoresMap = toScoreMap(existingScores);
 
-        scoreRepository.saveAll(scores);
+        List<DiagnosisCategoryScore> scoresToSave = calculateDiagnosisResults.stream()
+            .filter(result -> result.score() >= 8)
+            .map(result -> processScore(result, categoryMap, existingScoresMap, loginMemberId))
+            .collect(Collectors.toList());
+
+        scoreRepository.saveAll(scoresToSave);
     }
 
     @Transactional(readOnly = true)
@@ -156,5 +181,36 @@ public class DiagnosisService {
             .member(member)
             .answerType(AnswerType.from(answer))
             .build();
+    }
+
+    private Map<Long, DiagnosisCategoryScore> toScoreMap(
+        List<DiagnosisCategoryScore> existingScores) {
+        return existingScores.stream()
+            .collect(Collectors.toMap(
+                DiagnosisCategoryScore::getCategoryId,
+                score -> score,
+                (existing, replacement) -> existing
+            ));
+    }
+
+    private DiagnosisCategoryScore processScore(
+        CalculateDiagnosisResult result,
+        Map<String, Category> categoryMap,
+        Map<Long, DiagnosisCategoryScore> existingScoresMap,
+        Long loginMemberId
+    ) {
+        Category category = categoryMap.get(result.categoryTitle());
+        DiagnosisCategoryScore existingScore = existingScoresMap.get(category.getId());
+
+        if (existingScore != null) {
+            existingScore.updateScore(result.score());
+            return existingScore;
+        } else {
+            return DiagnosisCategoryScore.builder()
+                .score(result.score())
+                .categoryId(category.getId())
+                .memberId(loginMemberId)
+                .build();
+        }
     }
 }

@@ -19,4 +19,8 @@ public class DiagnosisCategoryScoreRepository {
     public void saveAll(List<DiagnosisCategoryScore> diagnosisCategoryScores) {
         jpaRepository.saveAll(diagnosisCategoryScores);
     }
+
+    public List<DiagnosisCategoryScore> findByMemberId(Long memberId) {
+        return jpaRepository.findByMemberId(memberId);
+    }
 }

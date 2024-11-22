@@ -35,4 +35,8 @@ public class DiagnosisCategoryScore {
         this.categoryId = categoryId;
         this.score = score;
     }
+
+    public void updateScore(int score) {
+        this.score = score;
+    }
 }

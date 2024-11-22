@@ -44,4 +44,8 @@ public class DiagnosisResult {
         this.question = question;
         this.answerType = answerType;
     }
+
+    public void updateAnswerType(AnswerType from) {
+        this.answerType = from;
+    }
 }
