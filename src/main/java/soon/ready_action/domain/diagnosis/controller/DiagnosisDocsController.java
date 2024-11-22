@@ -33,6 +33,11 @@ public abstract class DiagnosisDocsController {
         DiagnosisQuestionPaginationRequest request
     );
 
+    @Operation(summary = "질문 제출", description = "선택한 질문의 응답 제출")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "void"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public abstract ResponseEntity<Void> handleDiagnosisQuestion(
         CategoryWithDiagnosisRequest request
     );
