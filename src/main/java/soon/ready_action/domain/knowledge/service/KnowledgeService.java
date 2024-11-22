@@ -65,4 +65,17 @@ public class KnowledgeService {
                 knowledge.getCategory().getTitle()
         );
     }
+
+    // 최신 3개의 자립 지식 조회
+    public List<KnowledgeResponse.KnowledgeContent> getLatestKnowledge() {
+        List<Knowledge> knowledgeList = knowledgeRepository.findTop3ByOrderByIdDesc();
+
+        return knowledgeList.stream()
+                .map(knowledge -> new KnowledgeResponse.KnowledgeContent(
+                        knowledge.getId(),
+                        knowledge.getTitle(),
+                        knowledge.getContent()
+                ))
+                .collect(Collectors.toList());
+    }
 }
