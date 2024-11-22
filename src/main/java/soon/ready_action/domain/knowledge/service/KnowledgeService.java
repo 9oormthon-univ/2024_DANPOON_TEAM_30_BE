@@ -18,18 +18,18 @@ public class KnowledgeService {
 
     private final KnowledgeRepository knowledgeRepository;
 
-    // 무한 스크롤 조회
+    // 전체 조회
     @Transactional(readOnly = true)
     public KnowledgeResponse getKnowledgeByCategory(Long categoryId, int size, Long lastKnowledgeId) {
         List<Knowledge> knowledgeList;
 
+        // 페이지 요청 생성
+        Pageable pageable = PageRequest.of(0, size);
         if (lastKnowledgeId == null) {
             // 첫 페이지인 경우
-            Pageable pageable = PageRequest.of(0, size);
             knowledgeList = knowledgeRepository.findFirstKnowledge(categoryId, pageable);
         } else {
             // 이후 페이지인 경우
-            Pageable pageable = PageRequest.of(0, size); // 페이지 번호는 0으로 고정
             knowledgeList = knowledgeRepository.findKnowledgeAfterId(categoryId, lastKnowledgeId, pageable);
         }
 
@@ -42,12 +42,13 @@ public class KnowledgeService {
                 ))
                 .collect(Collectors.toList());
 
-        // 카테고리 타이틀
+        // 카테고리 타이틀 추출
         String categoryTitle = knowledgeList.isEmpty() ? "" : knowledgeList.get(0).getCategory().getTitle();
 
-        Long nextCursor = knowledgeList.size() < size ? -1 : knowledgeList.get(knowledgeList.size() - 1).getId();
+        // 다음 페이지 여부 확인
+        boolean hasNextPage = knowledgeList.size() == size;
 
-        return new KnowledgeResponse(categoryTitle, contents, knowledgeList.size(), nextCursor);
+        return new KnowledgeResponse(categoryTitle, contents, knowledgeList.size(), hasNextPage);
     }
 
 
