@@ -7,15 +7,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
-import soon.ready_action.domain.diagnosis.repository.jpa.diagnosisQuestionJpaRepository;
+import soon.ready_action.domain.diagnosis.repository.jpa.DiagnosisQuestionJpaRepository;
 import soon.ready_action.global.exception.DiagnosisQuestionNotFoundException;
 
 @RequiredArgsConstructor
 @Repository
 public class DiagnosisQuestionRepository {
 
-    private final diagnosisQuestionJpaRepository diagnosisQuestionJpaRepository;
+    private final DiagnosisQuestionJpaRepository diagnosisQuestionJpaRepository;
 
     public long count() {
         return diagnosisQuestionJpaRepository.count();
@@ -57,5 +58,19 @@ public class DiagnosisQuestionRepository {
 
     public List<DiagnosisQuestion> findAllById(Set<Long> ids) {
         return diagnosisQuestionJpaRepository.findAllById(ids);
+    }
+
+    public List<DiagnosisQuestionResponse> getPagedDiagnosisQuestion(
+        Long lastQuestionId, Long memberId, String categoryTitle
+    ) {
+        return diagnosisQuestionJpaRepository.getPagedDiagnosisQuestion(
+            lastQuestionId, memberId, categoryTitle
+        );
+    }
+
+    public boolean determineHasNextPage(
+        List<DiagnosisQuestionResponse> paginatedDiagnosisQuestion
+    ) {
+        return diagnosisQuestionJpaRepository.determineHasNextPage(paginatedDiagnosisQuestion);
     }
 }
