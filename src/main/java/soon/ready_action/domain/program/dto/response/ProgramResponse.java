@@ -1,4 +1,4 @@
-package soon.ready_action.domain.program.dto;
+package soon.ready_action.domain.program.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +24,7 @@ public class ProgramResponse {
         private LocalDate endDate;
         private ProgramStatus status;
         private String applicationUrl;
+        private boolean isScraped;
     }
 
     @Data
@@ -36,5 +37,6 @@ public class ProgramResponse {
         private ProgramStatus status;
         private String applicationUrl;
         private String categoryTitle;
+        private boolean isScraped;
     }
 }

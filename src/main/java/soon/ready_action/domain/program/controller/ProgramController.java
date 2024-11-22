@@ -8,9 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import soon.ready_action.domain.program.dto.ProgramResponse;
-import soon.ready_action.domain.program.dto.ProgramSearchResponse;
+import soon.ready_action.domain.program.dto.response.ProgramResponse;
+import soon.ready_action.domain.program.dto.response.ProgramSearchResponse;
 import soon.ready_action.domain.program.service.ProgramService;
+import soon.ready_action.domain.scrap.service.ScrapService;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class ProgramController {
 
     private final ProgramService programService;
+    private final ScrapService scrapService;
 
     // 전체 조회
     @Operation(summary = "프로그램 전체 조회", description = "카테고리별 프로그램 전체 조회")
@@ -78,4 +80,35 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "프로그램 스크랩", description = "프로그램을 스크랩")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스크랩 성공"),
+            @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("/{programId}/scrap")
+    public ResponseEntity<String> scrapProgram(@PathVariable Long programId) {
+        try {
+            scrapService.scrapProgram(programId);
+            return ResponseEntity.ok("프로그램이 성공적으로 스크랩되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "프로그램 스크랩 취소", description = "프로그램 스크랩을 취소")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스크랩 취소 성공"),
+            @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @DeleteMapping("/{programId}/scrap")
+    public ResponseEntity<String> cancelScrap(@PathVariable Long programId) {
+        try {
+            scrapService.cancelScrap(programId);
+            return ResponseEntity.ok("프로그램 스크랩이 성공적으로 취소되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

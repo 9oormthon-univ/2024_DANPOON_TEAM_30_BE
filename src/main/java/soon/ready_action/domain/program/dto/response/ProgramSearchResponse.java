@@ -1,4 +1,4 @@
-package soon.ready_action.domain.program.dto;
+package soon.ready_action.domain.program.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ProgramSearchResponse {
 
-    private List<SearchResult> data; // 검색 결과 목록
-    private int totalElements;      // 총 검색된 개수
-    private boolean hasNextPage;    // 다음 페이지 여부
+    private List<SearchResult> data;
+    private int totalElements;
+    private boolean hasNextPage;
 
     @Data
     @AllArgsConstructor
@@ -23,8 +23,8 @@ public class ProgramSearchResponse {
         private LocalDate startDate;
         private LocalDate endDate;
         private ProgramStatus status;
-        private boolean isScraped;  // 스크랩 여부
-        private String category;   // 카테고리 제목
+        private boolean isScraped;
+        private String category;
     }
 }
 
