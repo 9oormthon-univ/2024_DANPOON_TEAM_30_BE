@@ -49,6 +49,15 @@ public class DiagnosisQuestionPaginationRepositoryImpl implements
             .fetch();
     }
 
+    public boolean determineHasNextPage(List<DiagnosisQuestionResponse> paginatedDiagnosisQuestion
+    ) {
+        if (paginatedDiagnosisQuestion.size() > PAGE_SIZE) {
+            paginatedDiagnosisQuestion.remove(PAGE_SIZE);
+            return true;
+        }
+        return false;
+    }
+
     private BooleanExpression categoryCondition(String categoryTitle) {
         return categoryTitle != null ? category.title.eq(categoryTitle) : null;
     }

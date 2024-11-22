@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
+import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
 import soon.ready_action.domain.diagnosis.service.DiagnosisService;
 
 @RequiredArgsConstructor
@@ -27,10 +29,13 @@ public class DiagnosisController extends DiagnosisDocsController {
         return ResponseEntity.ok().build();
     }
 
-//    @Override
-    @GetMapping
-    public ResponseEntity<Void> handleDiagnosisQuestion() {
+    @Override
+    @GetMapping("/questions")
+    public ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
+        @RequestBody DiagnosisQuestionPaginationRequest request
+    ) {
+        var wrapper = diagnosisService.getPagedDiagnosisQuestion(request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(wrapper);
     }
 }

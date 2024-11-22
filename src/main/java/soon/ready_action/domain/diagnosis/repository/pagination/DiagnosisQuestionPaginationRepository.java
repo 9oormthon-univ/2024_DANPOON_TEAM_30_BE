@@ -12,4 +12,6 @@ public interface DiagnosisQuestionPaginationRepository {
         Long memberId,
         String categoryTitle
     );
+
+    boolean determineHasNextPage(List<DiagnosisQuestionResponse> paginatedDiagnosisQuestion);
 }

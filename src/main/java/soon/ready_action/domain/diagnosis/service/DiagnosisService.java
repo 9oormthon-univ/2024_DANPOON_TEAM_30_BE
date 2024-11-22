@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
+import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
 import soon.ready_action.domain.diagnosis.entity.AnswerType;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
@@ -67,8 +70,26 @@ public class DiagnosisService {
         resultRepository.saveAll(results);
     }
 
-    private DiagnosisResult createDiagnosisResult(DiagnosisQuestion question,
-        Member member, Boolean answer) {
+    public DiagnosisQuestionPaginationResponseWrapper getPagedDiagnosisQuestion(
+        DiagnosisQuestionPaginationRequest request
+    ) {
+        List<DiagnosisQuestionResponse> pagedDiagnosisQuestion = questionRepository.getPagedDiagnosisQuestion(
+            request.lastQuestionId(), TokenService.getLoginMemberId(), request.categoryTitle()
+        );
+
+        boolean determineHasNextPage = questionRepository.determineHasNextPage(
+            pagedDiagnosisQuestion
+        );
+
+        return DiagnosisQuestionPaginationResponseWrapper.builder()
+            .questions(pagedDiagnosisQuestion)
+            .hasNext(determineHasNextPage)
+            .build();
+    }
+
+    private DiagnosisResult createDiagnosisResult(
+        DiagnosisQuestion question, Member member, Boolean answer
+    ) {
         return DiagnosisResult.builder()
             .question(question)
             .member(member)
