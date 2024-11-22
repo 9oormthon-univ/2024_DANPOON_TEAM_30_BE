@@ -1,5 +1,7 @@
 package soon.ready_action.domain.diagnosis.service;
 
+import static soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository.STANDARD_SCORE;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +39,7 @@ public class DiagnosisScoreService {
         Map<Long, DiagnosisCategoryScore> existingScoresMap = toScoreMap(existingScores);
 
         List<DiagnosisCategoryScore> scoresToSave = calculateDiagnosisResults.stream()
-            .filter(result -> result.score() >= 8)
+            .filter(result -> result.score() >= STANDARD_SCORE)
             .map(result -> processScore(result, categoryMap, existingScoresMap, loginMemberId))
             .collect(Collectors.toList());
 
