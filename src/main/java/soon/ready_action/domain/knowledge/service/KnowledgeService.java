@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soon.ready_action.domain.category.entity.Category;
+import soon.ready_action.domain.category.repository.CategoryRepository;  // CategoryRepository import 추가
 import soon.ready_action.domain.knowledge.dto.KnowledgeResponse;
 import soon.ready_action.domain.knowledge.dto.KnowledgeResponse.DetailResponse;
 import soon.ready_action.domain.knowledge.entity.Knowledge;
 import soon.ready_action.domain.knowledge.repository.KnowledgeRepository;
 import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,21 +20,22 @@ import java.util.stream.Collectors;
 public class KnowledgeService {
 
     private final KnowledgeRepository knowledgeRepository;
+    private final CategoryRepository categoryRepository;
 
     // 전체 조회
     @Transactional(readOnly = true)
-    public KnowledgeResponse getKnowledgeByCategory(Long categoryId, int size, Long lastKnowledgeId) {
-        List<Knowledge> knowledgeList;
+    public KnowledgeResponse getKnowledgeByCategory(String categoryTitle, int page) {
+        // 기본 페이지 크기 설정 (5개)
+        int size = 5;
 
-        // 페이지 요청 생성
-        Pageable pageable = PageRequest.of(0, size);
-        if (lastKnowledgeId == null) {
-            // 첫 페이지인 경우
-            knowledgeList = knowledgeRepository.findFirstKnowledge(categoryId, pageable);
-        } else {
-            // 이후 페이지인 경우
-            knowledgeList = knowledgeRepository.findKnowledgeAfterId(categoryId, lastKnowledgeId, pageable);
-        }
+        // 페이지 번호를 0-based로 변환 (1부터 시작하므로 -1 처리)
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        // categoryTitle로 카테고리 객체를 찾음
+        Category category = categoryRepository.findByTitle(categoryTitle);
+
+        // 해당 카테고리의 지식 조회
+        List<Knowledge> knowledgeList = knowledgeRepository.findKnowledgeByCategoryTitle(categoryTitle, pageable);
 
         // 결과 매핑
         List<KnowledgeResponse.KnowledgeContent> contents = knowledgeList.stream()
@@ -42,15 +46,8 @@ public class KnowledgeService {
                 ))
                 .collect(Collectors.toList());
 
-        // 카테고리 타이틀 추출
-        String categoryTitle = knowledgeList.isEmpty() ? "" : knowledgeList.get(0).getCategory().getTitle();
-
-        // 다음 페이지 여부 확인
-        boolean hasNextPage = knowledgeList.size() == size;
-
-        return new KnowledgeResponse(categoryTitle, contents, knowledgeList.size(), hasNextPage);
+        return new KnowledgeResponse(categoryTitle, contents);
     }
-
 
     // 상세 조회
     @Transactional(readOnly = true)

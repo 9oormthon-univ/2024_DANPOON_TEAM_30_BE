@@ -14,7 +14,6 @@ public class ProgramResponse {
 
     private List<ProgramContent> contents;
     private String categoryTitle;
-    private boolean hasNextPage;
 
     @Data
     @AllArgsConstructor

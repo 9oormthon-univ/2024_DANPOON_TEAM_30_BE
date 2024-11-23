@@ -12,8 +12,6 @@ import java.util.List;
 public class ScrapProgramResponse {
 
     private List<ScrapProgramSearchResult> data;
-    private int totalElements;
-    private boolean hasNextPage;
 
     @Data
     @AllArgsConstructor

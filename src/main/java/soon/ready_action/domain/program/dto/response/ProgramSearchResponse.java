@@ -11,9 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProgramSearchResponse {
 
-    private List<SearchResult> data;
-    private int totalElements;
-    private boolean hasNextPage;
+    private List<SearchResult> searchResults;
 
     @Data
     @AllArgsConstructor
