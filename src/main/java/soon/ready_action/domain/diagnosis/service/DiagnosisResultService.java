@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soon.ready_action.domain.badge.entity.BadgeType;
 import soon.ready_action.domain.badge.service.BadgeService;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
