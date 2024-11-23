@@ -140,7 +140,7 @@ public class ProgramService {
                         .status(program.getProgramStatus())
                         .build();
                 })
-            .toList()
+            .toList();
     }
     // 카테고리에 해당하는 최신 3개의 프로그램 조회
     public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
