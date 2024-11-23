@@ -41,8 +41,8 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .cors(cors -> cors.configurationSource(corsConfig()));
+            );
+//            .cors(cors -> cors.configurationSource(corsConfig()));
 
         http
             .authorizeHttpRequests(auth -> {
