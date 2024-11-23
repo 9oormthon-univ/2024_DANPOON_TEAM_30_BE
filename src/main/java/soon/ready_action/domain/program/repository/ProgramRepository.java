@@ -32,4 +32,5 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
                                                          @Param("lastProgramId") Long lastProgramId,
                                                          Pageable pageable);
 
+    List<Program> findByCategoryTitle(String categoryTitle);
 }

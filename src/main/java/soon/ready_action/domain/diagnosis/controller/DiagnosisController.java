@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
 import soon.ready_action.domain.diagnosis.service.DiagnosisResultService;
 
@@ -43,9 +44,9 @@ public class DiagnosisController extends DiagnosisDocsController {
 
     @Override
     @GetMapping("/result")
-    public ResponseEntity<?> handleDiagnosisResult() {
-        resultService.getDiagnosisResult();
+    public ResponseEntity<DiagnosisResultWrapper> handleDiagnosisResult() {
+        DiagnosisResultWrapper wrapper = resultService.getDiagnosisResult();
 
-        return null;
+        return ResponseEntity.ok(wrapper);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 
 @Tag(name = "Diagnosis Controller", description = "Diagnosis API")
@@ -34,5 +35,9 @@ public abstract class DiagnosisDocsController {
     );
 
     @Operation(summary = "진단 결과 조회", description = "진단 결과 조회")
-    public abstract ResponseEntity<?> handleDiagnosisResult();
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "DiagnosisResultWrapper", content = @Content(schema = @Schema(implementation = DiagnosisResultWrapper.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public abstract ResponseEntity<DiagnosisResultWrapper> handleDiagnosisResult();
 }
