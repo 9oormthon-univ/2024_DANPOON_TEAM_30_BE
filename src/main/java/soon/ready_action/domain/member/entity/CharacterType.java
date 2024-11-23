@@ -9,11 +9,11 @@ import soon.ready_action.global.exception.CharacterTypeNotFoundException;
 @RequiredArgsConstructor
 @Getter
 public enum CharacterType {
-    COOL("쿨쿨이", value -> value < 10),
-    HANDY("뚝딱뚝딱", value -> value < 20),
-    EXCITED("두근두근", value -> value < 30),
-    GENIUS("척척박사", value -> value < 40),
-    PROUD("으쓱으쓱", value -> value >= 40);
+    COOL("ONE", value -> value < 10),
+    HANDY("TWO", value -> value < 20),
+    EXCITED("THREE", value -> value < 30),
+    GENIUS("FOUR", value -> value < 40),
+    PROUD("FIVE", value -> value >= 40);
 
     private final String kor;
     private final IntPredicate condition;
