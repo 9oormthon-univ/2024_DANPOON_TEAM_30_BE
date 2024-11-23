@@ -1,11 +1,18 @@
 package soon.ready_action.domain.program.service;
 
+import static soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository.LOW_SCORE;
+
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import soon.ready_action.domain.category.entity.Category;
+import soon.ready_action.domain.category.repository.CategoryRepository;
+import soon.ready_action.domain.diagnosis.dto.CalculateDiagnosisResult;
 import soon.ready_action.domain.program.dto.response.ProgramResponse;
+import soon.ready_action.domain.program.dto.response.ProgramResponse.DetailResponse;
 import soon.ready_action.domain.program.dto.response.ProgramSearchResponse;
 import soon.ready_action.domain.program.entity.Program;
 import soon.ready_action.domain.program.repository.ProgramRepository;
@@ -20,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProgramService {
 
     private final ProgramRepository programRepository;
+    private final CategoryRepository categoryRepository;
     private final ScrapService scrapService;
 
     // 전체 조회
@@ -59,7 +67,7 @@ public class ProgramService {
 
     // 상세 조회
     @Transactional(readOnly = true)
-    public ProgramResponse.DetailResponse getProgramById(Long programId) {
+    public DetailResponse getProgramById(Long programId) {
         Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
 
         Program program = programRepository.findById(programId)
@@ -68,7 +76,7 @@ public class ProgramService {
         // 스크랩 여부 확인
         boolean isScraped = scrapService.getScrappedProgramIds(memberId).contains(programId);
 
-        return new ProgramResponse.DetailResponse(
+        return new DetailResponse(
                 program.getId(),
                 program.getTitle(),
                 program.getStartDate(),
@@ -106,5 +114,58 @@ public class ProgramService {
         boolean hasNextPage = programs.size() == size;
 
         return new ProgramSearchResponse(searchResults, programRepository.countProgramsByTitle(keyword), hasNextPage);
+    }
+
+    public List<DetailResponse> recommendRandomProgram(List<CalculateDiagnosisResult> results) {
+        Long loginMemberId = TokenService.getLoginMemberId();
+
+        return results.stream()
+            .filter(result -> result.score() <= LOW_SCORE)
+            .map(result -> {
+                Category category = categoryRepository.findByTitle(result.categoryTitle());
+                List<Program> programs = programRepository.findByCategoryTitle(category.getTitle());
+
+                int randomIndex = (int) (Math.random() * programs.size());
+                Program program = programs.get(randomIndex);
+                boolean isScraped = scrapService.getScrappedProgramIds(loginMemberId).contains(program.getId());
+
+                return DetailResponse.builder()
+                        .id(program.getId())
+                        .applicationUrl(program.getApplicationUrl())
+                        .title(program.getTitle())
+                        .categoryTitle(program.getCategory().getTitle())
+                        .startDate(program.getStartDate())
+                        .endDate(program.getEndDate())
+                        .isScraped(isScraped)
+                        .status(program.getProgramStatus())
+                        .build();
+                })
+            .toList()
+    }
+    // 카테고리에 해당하는 최신 3개의 프로그램 조회
+    public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
+        List<Program> programs;
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            // 전체 프로그램에서 최신 3개 조회
+            programs = programRepository.findTop3ByOrderByStartDateDesc();
+        } else {
+            // 특정 카테고리에 해당하는 최신 3개 프로그램 조회
+            programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
+        }
+
+        Long memberId = TokenService.getLoginMemberId();
+
+        return programs.stream()
+                .map(program -> new ProgramResponse.ProgramContent(
+                        program.getId(),
+                        program.getTitle(),
+                        program.getStartDate(),
+                        program.getEndDate(),
+                        program.getStatus(),
+                        program.getApplicationUrl(),
+                        scrapService.getScrappedProgramIds(memberId).contains(program.getId())
+                ))
+                .collect(Collectors.toList());
     }
 }

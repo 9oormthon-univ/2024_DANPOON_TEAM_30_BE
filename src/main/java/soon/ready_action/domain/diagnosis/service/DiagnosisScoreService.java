@@ -27,7 +27,7 @@ public class DiagnosisScoreService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void calculateAndSaveDiagnosisScores(Long loginMemberId) {
+    public int calculateAndSaveDiagnosisScores(Long loginMemberId) {
         List<Category> categories = categoryRepository.findAll();
         Map<String, Category> categoryMap = categories.stream()
             .collect(Collectors.toMap(Category::getTitle, category -> category));
@@ -44,6 +44,10 @@ public class DiagnosisScoreService {
             .collect(Collectors.toList());
 
         scoreRepository.saveAll(scoresToSave);
+
+        return calculateDiagnosisResults.stream()
+            .mapToInt(CalculateDiagnosisResult::score)
+            .sum();
     }
 
     @Transactional(readOnly = true)
@@ -90,5 +94,10 @@ public class DiagnosisScoreService {
                 .memberId(loginMemberId)
                 .build();
         }
+    }
+
+    // 사용자의 자가진단 총 점수 계산
+    public int getTotalScoreByMemberId(Long memberId) {
+        return scoreRepository.getTotalScoreByMemberId(memberId);
     }
 }

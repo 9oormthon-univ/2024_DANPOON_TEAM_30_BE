@@ -15,4 +15,7 @@ public interface KnowledgeRepository extends JpaRepository<Knowledge, Long> {
 
     @Query("SELECT k FROM Knowledge k WHERE k.category.id = :categoryId ORDER BY k.id DESC")
     List<Knowledge> findFirstKnowledge(@Param("categoryId") Long categoryId, Pageable pageable);
+
+    // 최신 3개의 자립 지식 조회
+    List<Knowledge> findTop3ByOrderByIdDesc();
 }

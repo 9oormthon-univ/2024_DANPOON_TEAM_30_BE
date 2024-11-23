@@ -1,6 +1,7 @@
 package soon.ready_action.domain.program.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import soon.ready_action.domain.program.entity.ProgramStatus;
 
@@ -27,6 +28,7 @@ public class ProgramResponse {
         private boolean isScraped;
     }
 
+    @Builder
     @Data
     @AllArgsConstructor
     public static class DetailResponse {

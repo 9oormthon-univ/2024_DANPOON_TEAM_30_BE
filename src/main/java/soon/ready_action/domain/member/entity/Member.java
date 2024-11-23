@@ -38,6 +38,9 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String kakaoId;
 
+    @Enumerated(EnumType.STRING)
+    private CharacterType characterType;
+
     @Builder
     public Member(String kakaoId) {
         this.nickname = "";
@@ -45,6 +48,7 @@ public class Member {
         this.refreshToken = "";
         this.role = Role.ROLE_GUEST;
         this.kakaoId = kakaoId;
+        this.characterType = CharacterType.COOL;
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -61,5 +65,9 @@ public class Member {
         this.birthday = birthday;
         this.refreshToken = refreshToken;
         this.role = role;
+    }
+
+    public void updateCharacterType(int score) {
+        this.characterType = CharacterType.of(score);
     }
 }
