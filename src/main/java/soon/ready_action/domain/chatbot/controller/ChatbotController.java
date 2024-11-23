@@ -34,12 +34,19 @@ public class ChatbotController {
             @ApiResponse(responseCode = "404", description = "잘못된 경로", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PostMapping
-    public ResponseEntity<List<ChatbotResponse>> getChatbotResponses(@RequestBody ChatbotRequest requestDto) {
+    @GetMapping
+    public ResponseEntity<List<ChatbotResponse>> getChatbotResponses(
+            @RequestParam int questionType,
+            @RequestParam int depth) {
+
+        // ChatbotRequest 객체 생성
+        ChatbotRequest requestDto = new ChatbotRequest(questionType, depth);
+
         List<Chatbot> responses = chatbotService.getChatbotResponses(requestDto);
         List<ChatbotResponse> responseDtos = responses.stream()
                 .map(ChatbotResponse::new)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(responseDtos);
     }
 }
