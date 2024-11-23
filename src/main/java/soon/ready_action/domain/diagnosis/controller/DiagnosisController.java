@@ -1,15 +1,19 @@
 package soon.ready_action.domain.diagnosis.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
-import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultDTO;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
 import soon.ready_action.domain.diagnosis.service.DiagnosisResultService;
@@ -24,10 +28,13 @@ public class DiagnosisController extends DiagnosisDocsController {
 
     @Override
     @GetMapping("/questions")
-    public ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
-        @RequestBody DiagnosisQuestionPaginationRequest request
+    public ResponseEntity<List<DiagnosisQuestionResponse>> handleDiagnosisQuestion(
+//        @RequestParam Long lastQuestionId,
+//        @RequestParam String categoryTitle
+        @RequestParam int page
     ) {
-        var wrapper = questionService.getPagedDiagnosisQuestion(request);
+//        var wrapper = questionService.getPagedDiagnosisQuestion(lastQuestionId, categoryTitle);
+        var wrapper = questionService.getNumberingPagination(page - 1);
 
         return ResponseEntity.ok(wrapper);
     }
@@ -48,5 +55,12 @@ public class DiagnosisController extends DiagnosisDocsController {
         DiagnosisResultWrapper wrapper = resultService.getDiagnosisResult();
 
         return ResponseEntity.ok(wrapper);
+    }
+
+    @Operation(summary = "진단 결과 조회", description = "진단 결과 및 뱃지 정보 조회")
+    @GetMapping("/diagnosis-page")
+    public ResponseEntity<DiagnosisResultDTO> handleDiagnosisResultWithBadges() {
+        DiagnosisResultDTO diagnosisResult = resultService.getDiagnosisResultWithBadges();
+        return ResponseEntity.ok(diagnosisResult);
     }
 }

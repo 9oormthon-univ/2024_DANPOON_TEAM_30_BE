@@ -2,7 +2,6 @@ package soon.ready_action.domain.program.service;
 
 import static soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository.LOW_SCORE;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +78,7 @@ public class ProgramService {
         return new DetailResponse(
                 program.getId(),
                 program.getTitle(),
+                program.getDescription(),
                 program.getStartDate(),
                 program.getEndDate(),
                 program.getProgramStatus(),

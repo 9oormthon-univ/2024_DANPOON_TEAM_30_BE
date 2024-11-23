@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
-import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
@@ -44,10 +43,11 @@ public class DiagnosisQuestionService {
 
     @Transactional(readOnly = true)
     public DiagnosisQuestionPaginationResponseWrapper getPagedDiagnosisQuestion(
-        DiagnosisQuestionPaginationRequest request
+        Long lastQuestionId,
+        String categoryTitle
     ) {
         List<DiagnosisQuestionResponse> pagedDiagnosisQuestion = questionRepository.getPagedDiagnosisQuestion(
-            request.lastQuestionId(), TokenService.getLoginMemberId(), request.categoryTitle()
+            lastQuestionId, TokenService.getLoginMemberId(), categoryTitle
         );
 
         boolean hasNext = questionRepository.determineHasNextPage(pagedDiagnosisQuestion);
@@ -56,6 +56,10 @@ public class DiagnosisQuestionService {
             .questions(pagedDiagnosisQuestion)
             .hasNext(hasNext)
             .build();
+    }
+
+    public List<DiagnosisQuestionResponse> getNumberingPagination(int page) {
+        return questionRepository.getNumberingPagination(page);
     }
 }
 
