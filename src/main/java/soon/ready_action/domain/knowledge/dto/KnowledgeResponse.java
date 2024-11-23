@@ -12,7 +12,7 @@ public class KnowledgeResponse {
     private String categoryTitle;
     private List<KnowledgeContent> contents;
     private int totalElements;
-    private Long nextCursor;
+    private boolean hasNextPage;
 
     @Data
     @AllArgsConstructor

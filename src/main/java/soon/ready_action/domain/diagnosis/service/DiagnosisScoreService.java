@@ -1,5 +1,7 @@
 package soon.ready_action.domain.diagnosis.service;
 
+import static soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository.STANDARD_SCORE;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class DiagnosisScoreService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void calculateAndSaveDiagnosisScores(Long loginMemberId) {
+    public int calculateAndSaveDiagnosisScores(Long loginMemberId) {
         List<Category> categories = categoryRepository.findAll();
         Map<String, Category> categoryMap = categories.stream()
             .collect(Collectors.toMap(Category::getTitle, category -> category));
@@ -37,11 +39,15 @@ public class DiagnosisScoreService {
         Map<Long, DiagnosisCategoryScore> existingScoresMap = toScoreMap(existingScores);
 
         List<DiagnosisCategoryScore> scoresToSave = calculateDiagnosisResults.stream()
-            .filter(result -> result.score() >= 8)
+            .filter(result -> result.score() >= STANDARD_SCORE)
             .map(result -> processScore(result, categoryMap, existingScoresMap, loginMemberId))
             .collect(Collectors.toList());
 
         scoreRepository.saveAll(scoresToSave);
+
+        return calculateDiagnosisResults.stream()
+            .mapToInt(CalculateDiagnosisResult::score)
+            .sum();
     }
 
     @Transactional(readOnly = true)
@@ -88,5 +94,10 @@ public class DiagnosisScoreService {
                 .memberId(loginMemberId)
                 .build();
         }
+    }
+
+    // 사용자의 자가진단 총 점수 계산
+    public int getTotalScoreByMemberId(Long memberId) {
+        return scoreRepository.getTotalScoreByMemberId(memberId);
     }
 }

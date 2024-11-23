@@ -24,4 +24,17 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     @Query("SELECT COUNT(p) FROM Program p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     int countProgramsByTitle(@Param("keyword") String keyword);
+
+    // 페이지네이션
+    @Query("SELECT p FROM Program p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "AND (:lastProgramId IS NULL OR p.id < :lastProgramId) ORDER BY p.id DESC")
+    List<Program> searchProgramsByTitleWithLastProgramId(@Param("keyword") String keyword,
+                                                         @Param("lastProgramId") Long lastProgramId,
+                                                         Pageable pageable);
+
+    List<Program> findByCategoryTitle(String categoryTitle);
+
+    List<Program> findTop3ByCategoryIdInOrderByStartDateDesc(List<Long> categoryIds);
+
+    List<Program> findTop3ByOrderByStartDateDesc();
 }

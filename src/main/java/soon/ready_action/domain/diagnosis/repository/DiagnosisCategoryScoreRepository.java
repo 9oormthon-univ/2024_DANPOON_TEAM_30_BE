@@ -10,6 +10,9 @@ import soon.ready_action.domain.diagnosis.repository.jpa.DiagnosisCategoryScoreJ
 @Repository
 public class DiagnosisCategoryScoreRepository {
 
+    public static final int STANDARD_SCORE = 8;
+    public static final int LOW_SCORE = 4;
+
     private final DiagnosisCategoryScoreJpaRepository jpaRepository;
 
     public void save(DiagnosisCategoryScore diagnosisCategoryScore) {
@@ -22,5 +25,12 @@ public class DiagnosisCategoryScoreRepository {
 
     public List<DiagnosisCategoryScore> findByMemberId(Long memberId) {
         return jpaRepository.findByMemberId(memberId);
+    }
+
+    // 회원의 자가진단 총 점수 계산
+    public int getTotalScoreByMemberId(Long memberId) {
+        return jpaRepository.findByMemberId(memberId).stream()
+                .mapToInt(DiagnosisCategoryScore::getScore)
+                .sum();
     }
 }

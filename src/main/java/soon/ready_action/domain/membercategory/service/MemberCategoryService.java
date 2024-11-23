@@ -1,6 +1,8 @@
 package soon.ready_action.domain.membercategory.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import soon.ready_action.domain.category.entity.Category;
@@ -28,5 +30,12 @@ public class MemberCategoryService {
             .member(member)
             .build();
         memberCategoryRepository.save(memberCategory);
+    }
+
+    // 회원이 속한 카테고리 리스트 반환
+    public List<Category> getCategoriesByMemberId(Long memberId) {
+        return memberCategoryRepository.findByMemberId(memberId).stream()
+                .map(MemberCategory::getCategory)
+                .collect(Collectors.toList());
     }
 }
