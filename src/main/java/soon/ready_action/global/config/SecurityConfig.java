@@ -14,11 +14,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import soon.ready_action.global.oauth2.handler.Oauth2KakaoFailHandler;
-import soon.ready_action.global.oauth2.handler.Oauth2KakaoSuccessHandler;
-import soon.ready_action.global.oauth2.jwt.filter.JwtAuthorizationFilter;
-import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
-import soon.ready_action.global.oauth2.service.Oauth2KakaoService;
+import soon.ready_action.global.oauth2.v1.handler.Oauth2KakaoFailHandler;
+import soon.ready_action.global.oauth2.v1.handler.Oauth2KakaoSuccessHandler;
+import soon.ready_action.global.oauth2.v1.jwt.filter.JwtAuthorizationFilter;
+import soon.ready_action.global.oauth2.v1.jwt.provider.TokenProvider;
+import soon.ready_action.global.oauth2.v1.service.Oauth2KakaoService;
 import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class SecurityConfig {
                 auth
                     .requestMatchers(
                         "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue", "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**", "/kakao"
                     ).permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/v1/auth/signup").hasAuthority("ROLE_GUEST")
                     .anyRequest().authenticated();

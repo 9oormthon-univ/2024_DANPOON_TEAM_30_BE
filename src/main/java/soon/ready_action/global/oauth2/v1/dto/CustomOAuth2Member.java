@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.dto;
+package soon.ready_action.global.oauth2.v1.dto;
 
 import java.util.Collection;
 import java.util.Map;

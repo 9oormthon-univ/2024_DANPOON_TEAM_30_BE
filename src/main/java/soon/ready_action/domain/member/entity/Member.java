@@ -41,6 +41,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private CharacterType characterType;
 
+    @Column(name = "social_type")
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
     @Builder
     public Member(String kakaoId) {
         this.nickname = "";

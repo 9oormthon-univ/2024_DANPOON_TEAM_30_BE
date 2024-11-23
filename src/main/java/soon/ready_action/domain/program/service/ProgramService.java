@@ -2,7 +2,6 @@ package soon.ready_action.domain.program.service;
 
 import static soon.ready_action.domain.diagnosis.repository.DiagnosisCategoryScoreRepository.LOW_SCORE;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,7 @@ import soon.ready_action.domain.program.dto.response.ProgramSearchResponse;
 import soon.ready_action.domain.program.entity.Program;
 import soon.ready_action.domain.program.repository.ProgramRepository;
 import soon.ready_action.domain.scrap.service.ScrapService;
-import soon.ready_action.global.oauth2.service.TokenService;
+import soon.ready_action.global.oauth2.v1.service.TokenService;
 
 import java.util.List;
 import java.util.stream.Collectors;

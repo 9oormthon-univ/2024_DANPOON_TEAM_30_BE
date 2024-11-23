@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.service;
+package soon.ready_action.global.oauth2.v1.service;
 
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
-import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
+import soon.ready_action.global.oauth2.v1.dto.CustomOAuth2Member;
 
 @Slf4j
 @Service

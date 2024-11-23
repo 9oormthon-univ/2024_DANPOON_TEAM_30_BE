@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.handler;
+package soon.ready_action.global.oauth2.v1.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

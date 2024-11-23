@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.main.service.MainService;
 import soon.ready_action.domain.main.dto.response.MainResponse;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
-import soon.ready_action.global.oauth2.service.TokenService;
+import soon.ready_action.global.oauth2.v1.service.TokenService;
 
 @RestController
 @RequiredArgsConstructor

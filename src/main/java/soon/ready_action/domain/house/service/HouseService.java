@@ -15,9 +15,9 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
 
-    public List<HouseResponse> getHouseByCityAndCounty(HouseFilterRequest request) {
+    public List<HouseResponse> getHouseByCityAndCounty(String city, String county) {
         List<House> houses = houseRepository.findByCityAndCounty(
-            request.city(), request.county()
+            city, county
         );
 
         return houses.stream()

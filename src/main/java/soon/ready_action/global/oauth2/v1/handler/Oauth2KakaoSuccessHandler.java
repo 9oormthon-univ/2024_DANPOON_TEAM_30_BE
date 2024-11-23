@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.handler;
+package soon.ready_action.global.oauth2.v1.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,15 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 import soon.ready_action.domain.auth.dto.response.AuthResponse;
 import soon.ready_action.domain.member.entity.Role;
-import soon.ready_action.domain.member.service.MemberService;
-import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
-import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
-import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
-import soon.ready_action.global.oauth2.service.TokenService;
+import soon.ready_action.global.oauth2.v1.dto.CustomOAuth2Member;
+import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.v1.service.TokenService;
 import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @Slf4j

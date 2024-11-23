@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.jwt.common;
+package soon.ready_action.global.oauth2.v1.jwt.common;
 
 import lombok.Getter;
 
