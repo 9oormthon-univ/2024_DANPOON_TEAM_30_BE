@@ -11,6 +11,7 @@ import soon.ready_action.domain.diagnosis.repository.jpa.DiagnosisCategoryScoreJ
 public class DiagnosisCategoryScoreRepository {
 
     public static final int STANDARD_SCORE = 8;
+    public static final int LOW_SCORE = 4;
 
     private final DiagnosisCategoryScoreJpaRepository jpaRepository;
 

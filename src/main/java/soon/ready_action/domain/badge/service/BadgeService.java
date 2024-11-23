@@ -38,6 +38,11 @@ public class BadgeService {
             .forEach(result -> createAndSaveBadge(member, result));
     }
 
+    @Transactional(readOnly = true)
+    public List<BadgeType> getBadgeTypeByMember(Member member) {
+        return badgeRepository.findBadgeTypesByMemberId(member);
+    }
+
     private boolean isStandardScore(CalculateDiagnosisResult result) {
         return result.score() >= STANDARD_SCORE;
     }
