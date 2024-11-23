@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
 import soon.ready_action.domain.auth.service.AuthService;
 import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
-import soon.ready_action.global.oauth2.v1.jwt.dto.request.ReissueTokenRequest;
-import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
+import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")

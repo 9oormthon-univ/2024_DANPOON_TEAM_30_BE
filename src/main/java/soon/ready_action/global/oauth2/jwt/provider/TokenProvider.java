@@ -1,8 +1,8 @@
-package soon.ready_action.global.oauth2.v1.jwt.provider;
+package soon.ready_action.global.oauth2.jwt.provider;
 
-import static soon.ready_action.global.oauth2.v1.jwt.common.TokenExpiration.ACCESS_TOKEN;
-import static soon.ready_action.global.oauth2.v1.jwt.common.TokenExpiration.REFRESH_TOKEN;
-import static soon.ready_action.global.oauth2.v1.jwt.common.TokenType.AUTHORIZATION_HEADER;
+import static soon.ready_action.global.oauth2.jwt.common.TokenExpiration.ACCESS_TOKEN;
+import static soon.ready_action.global.oauth2.jwt.common.TokenExpiration.REFRESH_TOKEN;
+import static soon.ready_action.global.oauth2.jwt.common.TokenType.AUTHORIZATION_HEADER;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,7 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import soon.ready_action.domain.member.entity.Role;
-import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
 
 @Slf4j
 @Component

@@ -24,7 +24,7 @@ import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
 import soon.ready_action.domain.program.dto.response.ProgramResponse.DetailResponse;
 import soon.ready_action.domain.program.service.ProgramService;
-import soon.ready_action.global.oauth2.v1.service.TokenService;
+import soon.ready_action.global.oauth2.service.TokenService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -112,7 +112,7 @@ public class DiagnosisResultService {
         List<DetailResponse> detailResponses = programService.recommendRandomProgram(results);
 
         return DiagnosisResultWrapper.builder()
-            .characterType(characterName)
+            .characterType( characterName)
             .results(results)
             .programs(detailResponses)
             .build();

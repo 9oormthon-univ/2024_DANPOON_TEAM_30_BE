@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.v1.service;
+package soon.ready_action.global.oauth2.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soon.ready_action.domain.member.entity.Role;
 import soon.ready_action.domain.member.service.MemberService;
-import soon.ready_action.global.oauth2.v1.dto.CustomOAuth2Member;
-import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
-import soon.ready_action.global.oauth2.v1.jwt.provider.TokenProvider;
+import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
+import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
 
 @Service
 @RequiredArgsConstructor
