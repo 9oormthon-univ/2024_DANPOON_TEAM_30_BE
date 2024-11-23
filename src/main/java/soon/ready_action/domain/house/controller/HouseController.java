@@ -14,7 +14,7 @@ import soon.ready_action.domain.house.service.HouseService;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/houses")
-public class HouseController {
+public class HouseController extends HouseDocsController{
 
     private final HouseService houseService;
 
