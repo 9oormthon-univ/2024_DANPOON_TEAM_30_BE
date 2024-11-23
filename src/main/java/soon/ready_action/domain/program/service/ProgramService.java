@@ -110,7 +110,15 @@ public class ProgramService {
 
     // 카테고리에 해당하는 최신 3개의 프로그램 조회
     public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
-        List<Program> programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
+        List<Program> programs;
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            // 전체 프로그램에서 최신 3개 조회
+            programs = programRepository.findTop3ByOrderByStartDateDesc();
+        } else {
+            // 특정 카테고리에 해당하는 최신 3개 프로그램 조회
+            programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
+        }
 
         Long memberId = TokenService.getLoginMemberId();
 
