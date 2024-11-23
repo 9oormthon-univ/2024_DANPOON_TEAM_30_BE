@@ -23,4 +23,11 @@ public class DiagnosisCategoryScoreRepository {
     public List<DiagnosisCategoryScore> findByMemberId(Long memberId) {
         return jpaRepository.findByMemberId(memberId);
     }
+
+    // 회원의 자가진단 총 점수 계산
+    public int getTotalScoreByMemberId(Long memberId) {
+        return jpaRepository.findByMemberId(memberId).stream()
+                .mapToInt(DiagnosisCategoryScore::getScore)
+                .sum();
+    }
 }

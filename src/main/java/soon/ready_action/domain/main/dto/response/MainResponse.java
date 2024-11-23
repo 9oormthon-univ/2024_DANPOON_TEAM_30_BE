@@ -12,4 +12,5 @@ import java.util.List;
 public class MainResponse {
     private List<ProgramContent> programs;
     private List<KnowledgeContent> knowledge;
+    private String selfDiagnosis;
 }
