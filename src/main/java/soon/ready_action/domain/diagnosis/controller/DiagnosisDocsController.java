@@ -42,4 +42,5 @@ public abstract class DiagnosisDocsController {
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public abstract ResponseEntity<DiagnosisResultWrapper> handleDiagnosisResult();
+
 }

@@ -78,6 +78,7 @@ public class ProgramService {
         return new DetailResponse(
                 program.getId(),
                 program.getTitle(),
+                program.getDescription(),
                 program.getStartDate(),
                 program.getEndDate(),
                 program.getProgramStatus(),
