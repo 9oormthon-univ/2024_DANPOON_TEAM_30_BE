@@ -1,13 +1,25 @@
 package soon.ready_action.domain.house.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import soon.ready_action.domain.house.entity.House;
 
-import java.util.List;
-
+@RequiredArgsConstructor
 @Repository
-public interface HouseRepository extends JpaRepository<House, Long> {
+public class HouseRepository {
 
-    List<House> findByRegion1depthNameAndRegion2depthName(String region1depthName, String region2depthName);
+    private final HouseJpaRepository houseJpaRepository;
+
+    public void save(House house) {
+        houseJpaRepository.save(house);
+    }
+
+    public Long count() {
+        return houseJpaRepository.count();
+    }
+
+    public List<House> findByCityAndCounty(String city, String county) {
+        return houseJpaRepository.findByCityAndCounty(city, county);
+    }
 }
