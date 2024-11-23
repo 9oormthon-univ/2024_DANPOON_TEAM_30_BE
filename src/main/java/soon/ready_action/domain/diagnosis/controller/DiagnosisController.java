@@ -1,22 +1,20 @@
 package soon.ready_action.domain.diagnosis.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
-import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
-import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
-import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultDTO;
-import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
-import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
-import soon.ready_action.domain.diagnosis.service.DiagnosisResultService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+import soon.ready_action.domain.auth.dto.response.AuthResponse;
+import soon.ready_action.domain.member.entity.Role;
+import soon.ready_action.global.oauth2.dto.CustomOAuth2Member;
+import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.service.TokenService;
+import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/diagnosis")
