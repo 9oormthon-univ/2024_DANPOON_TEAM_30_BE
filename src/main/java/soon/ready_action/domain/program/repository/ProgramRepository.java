@@ -33,4 +33,8 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
                                                          Pageable pageable);
 
     List<Program> findByCategoryTitle(String categoryTitle);
+
+    List<Program> findTop3ByCategoryIdInOrderByStartDateDesc(List<Long> categoryIds);
+
+    List<Program> findTop3ByOrderByStartDateDesc();
 }

@@ -116,7 +116,6 @@ public class ProgramService {
         return new ProgramSearchResponse(searchResults, programRepository.countProgramsByTitle(keyword), hasNextPage);
     }
 
-
     public List<DetailResponse> recommendRandomProgram(List<CalculateDiagnosisResult> results) {
         Long loginMemberId = TokenService.getLoginMemberId();
 
@@ -141,6 +140,32 @@ public class ProgramService {
                         .status(program.getProgramStatus())
                         .build();
                 })
-            .toList();
+            .toList()
+    }
+    // 카테고리에 해당하는 최신 3개의 프로그램 조회
+    public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
+        List<Program> programs;
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            // 전체 프로그램에서 최신 3개 조회
+            programs = programRepository.findTop3ByOrderByStartDateDesc();
+        } else {
+            // 특정 카테고리에 해당하는 최신 3개 프로그램 조회
+            programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
+        }
+
+        Long memberId = TokenService.getLoginMemberId();
+
+        return programs.stream()
+                .map(program -> new ProgramResponse.ProgramContent(
+                        program.getId(),
+                        program.getTitle(),
+                        program.getStartDate(),
+                        program.getEndDate(),
+                        program.getStatus(),
+                        program.getApplicationUrl(),
+                        scrapService.getScrappedProgramIds(memberId).contains(program.getId())
+                ))
+                .collect(Collectors.toList());
     }
 }
