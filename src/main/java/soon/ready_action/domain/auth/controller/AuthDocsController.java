@@ -12,8 +12,8 @@ import soon.ready_action.domain.auth.dto.response.AuthResponse;
 import soon.ready_action.domain.auth.dto.response.OnboardingWrapperResponse;
 import soon.ready_action.domain.member.dto.request.MemberAdditionalInfoRequest;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
-import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
-import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.v1.jwt.dto.request.ReissueTokenRequest;
+import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
 
 @Tag(name = "Auth Controller", description = "Auth API")
 public abstract class AuthDocsController {

@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import soon.ready_action.domain.badge.entity.BadgeType;
 import soon.ready_action.domain.badge.service.BadgeService;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
@@ -21,10 +20,9 @@ import soon.ready_action.domain.diagnosis.repository.DiagnosisQuestionRepository
 import soon.ready_action.domain.diagnosis.repository.DiagnosisResultRepository;
 import soon.ready_action.domain.member.entity.Member;
 import soon.ready_action.domain.member.repository.MemberRepository;
-import soon.ready_action.domain.member.service.MemberService;
 import soon.ready_action.domain.program.dto.response.ProgramResponse.DetailResponse;
 import soon.ready_action.domain.program.service.ProgramService;
-import soon.ready_action.global.oauth2.service.TokenService;
+import soon.ready_action.global.oauth2.v1.service.TokenService;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
@@ -22,7 +23,8 @@ public abstract class DiagnosisDocsController {
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public abstract ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
-        DiagnosisQuestionPaginationRequest request
+        @RequestParam Long lastQuestionId,
+        @RequestParam String categoryTitle
     );
 
     @Operation(summary = "질문 제출", description = "선택한 질문의 응답 제출")

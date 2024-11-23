@@ -20,5 +20,7 @@ public abstract class HouseDocsController {
         @ApiResponse(responseCode = "200", description = "주거 조회 성공", content = @Content(schema = @Schema(implementation = HouseResponse.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public abstract ResponseEntity<List<HouseResponse>> handleHouse(HouseFilterRequest request);
+    public abstract ResponseEntity<List<HouseResponse>> handleHouse(
+        String city, String county
+    );
 }

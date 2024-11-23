@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.jwt.dto.request;
+package soon.ready_action.global.oauth2.v1.jwt.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;

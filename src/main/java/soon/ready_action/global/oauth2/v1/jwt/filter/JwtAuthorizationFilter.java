@@ -1,7 +1,7 @@
-package soon.ready_action.global.oauth2.jwt.filter;
+package soon.ready_action.global.oauth2.v1.jwt.filter;
 
-import static soon.ready_action.global.oauth2.jwt.common.TokenType.AUTHORIZATION_HEADER;
-import static soon.ready_action.global.oauth2.jwt.common.TokenType.BEARER_PREFIX;
+import static soon.ready_action.global.oauth2.v1.jwt.common.TokenType.AUTHORIZATION_HEADER;
+import static soon.ready_action.global.oauth2.v1.jwt.common.TokenType.BEARER_PREFIX;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 import soon.ready_action.global.exception.enums.ErrorCode;
-import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
+import soon.ready_action.global.oauth2.v1.jwt.provider.TokenProvider;
 import soon.ready_action.global.provider.CustomObjectMapperProvider;
 
 @RequiredArgsConstructor
