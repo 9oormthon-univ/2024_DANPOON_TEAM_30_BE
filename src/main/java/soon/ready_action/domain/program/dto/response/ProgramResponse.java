@@ -34,6 +34,7 @@ public class ProgramResponse {
     public static class DetailResponse {
         private Long id;
         private String title;
+        private String description;
         private LocalDate startDate;
         private LocalDate endDate;
         private ProgramStatus status;

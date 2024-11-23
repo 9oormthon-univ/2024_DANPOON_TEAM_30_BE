@@ -21,6 +21,9 @@ public class Program {
     private String title;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private LocalDate startDate;
 
     @Column(nullable = false)
