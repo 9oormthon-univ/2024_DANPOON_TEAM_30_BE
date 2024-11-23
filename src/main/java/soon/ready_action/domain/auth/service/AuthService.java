@@ -15,10 +15,10 @@ import soon.ready_action.domain.member.entity.Role;
 import soon.ready_action.domain.member.repository.MemberRepository;
 import soon.ready_action.domain.membercategory.service.MemberCategoryService;
 import soon.ready_action.global.exception.ForbiddenException;
-import soon.ready_action.global.oauth2.v1.jwt.dto.request.ReissueTokenRequest;
-import soon.ready_action.global.oauth2.v1.jwt.dto.response.TokenResponse;
-import soon.ready_action.global.oauth2.v1.jwt.provider.TokenProvider;
-import soon.ready_action.global.oauth2.v1.service.TokenService;
+import soon.ready_action.global.oauth2.jwt.dto.request.ReissueTokenRequest;
+import soon.ready_action.global.oauth2.jwt.dto.response.TokenResponse;
+import soon.ready_action.global.oauth2.jwt.provider.TokenProvider;
+import soon.ready_action.global.oauth2.service.TokenService;
 
 @RequiredArgsConstructor
 @Service

@@ -1,4 +1,4 @@
-package soon.ready_action.global.oauth2.v1.jwt.dto.response;
+package soon.ready_action.global.oauth2.jwt.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

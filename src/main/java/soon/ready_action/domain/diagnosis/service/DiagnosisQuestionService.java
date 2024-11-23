@@ -5,16 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
-import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.OnboardingQuestionResponse;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
 import soon.ready_action.domain.diagnosis.repository.DiagnosisQuestionRepository;
-import soon.ready_action.global.oauth2.v1.service.TokenService;
+import soon.ready_action.global.oauth2.service.TokenService;
 
 @Slf4j
 @RequiredArgsConstructor
