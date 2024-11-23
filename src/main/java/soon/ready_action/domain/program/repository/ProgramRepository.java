@@ -19,16 +19,13 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findByCategoryTitle(String categoryTitle);
 
-    List<Program> findTop3ByCategoryIdInOrderByStartDateDesc(List<Long> categoryIds);
-
-    List<Program> findTop3ByOrderByStartDateDesc();
-
     // 카테고리 제목에 해당하는 프로그램 목록 조회 (pageable 추가)
     List<Program> findByCategoryTitle(String categoryTitle, Pageable pageable);
 
     // 제목에 키워드를 포함하는 프로그램들 검색
     List<Program> findByTitleContaining(String keyword, Pageable pageable);
 
-    // 제목에 키워드를 포함하는 프로그램의 총 개수 반환
-    long countByTitleContaining(String keyword);
+    // 카테고리 ID 리스트에 해당하는 최신 프로그램 3개 조회 (페이징 추가)
+    @Query("SELECT p FROM Program p WHERE p.category.id IN :categoryIds ORDER BY p.startDate DESC")
+    List<Program> findTop3ByCategoryIdsOrderByStartDateDesc(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
 }

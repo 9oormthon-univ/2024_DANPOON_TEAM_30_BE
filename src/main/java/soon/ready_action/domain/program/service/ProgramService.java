@@ -138,29 +138,27 @@ public class ProgramService {
                 })
             .toList();
     }
-    // 카테고리에 해당하는 최신 3개의 프로그램 조회
-    public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
-        List<Program> programs;
 
-        if (categoryIds == null || categoryIds.isEmpty()) {
-            // 전체 프로그램에서 최신 3개 조회
-            programs = programRepository.findTop3ByOrderByStartDateDesc();
-        } else {
-            // 특정 카테고리에 해당하는 최신 3개 프로그램 조회
-            programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
-        }
+    // 카테고리 리스트에 해당하는 최신 프로그램 3개 조회
+    public List<ProgramResponse.DetailResponse> getLatestProgramsByCategories(List<Long> categoryIds, Pageable pageable, Long memberId) {
+        // 프로그램 조회 (Pageable을 고려하여 변경)
+        List<Program> programs = programRepository.findTop3ByCategoryIdsOrderByStartDateDesc(categoryIds, pageable);
 
-        Long memberId = TokenService.getLoginMemberId();
+        // 사용자가 스크랩한 프로그램 ID 목록 가져오기
+        List<Long> scrappedProgramIds = scrapService.getScrappedProgramIds(memberId);
 
+        // 프로그램 리스트를 DetailResponse로 변환하여 반환
         return programs.stream()
-                .map(program -> new ProgramResponse.ProgramContent(
+                .map(program -> new ProgramResponse.DetailResponse(
                         program.getId(),
                         program.getTitle(),
+                        program.getDescription(),
                         program.getStartDate(),
                         program.getEndDate(),
-                        program.getStatus(),
+                        program.getProgramStatus(),
                         program.getApplicationUrl(),
-                        scrapService.getScrappedProgramIds(memberId).contains(program.getId())
+                        program.getCategory().getTitle(),
+                        scrappedProgramIds.contains(program.getId()) // 실제 스크랩 여부 체크
                 ))
                 .collect(Collectors.toList());
     }
