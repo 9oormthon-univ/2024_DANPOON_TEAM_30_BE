@@ -30,6 +30,7 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException {
+        log.info("OAuth2 Success Handler");
         CustomOAuth2Member oAuth2Member = extractOAuth2Member(authentication);
 
         TokenResponse tokenResponse = tokenService.handleTokenGenerationAndUpdate(oAuth2Member);
