@@ -23,7 +23,7 @@ public class Chatbot {
     @Column(nullable = false, unique = true)
     private String question;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String answer;
 
     @Column(nullable = false)
