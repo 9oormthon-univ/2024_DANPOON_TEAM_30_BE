@@ -6,11 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.request.DiagnosisQuestionPaginationRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.global.exception.dto.response.ErrorResponse;
 
@@ -22,9 +24,10 @@ public abstract class DiagnosisDocsController {
         @ApiResponse(responseCode = "200", description = "DiagnosisQuestionPaginationResponseWrapper", content = @Content(schema = @Schema(implementation = DiagnosisQuestionPaginationResponseWrapper.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public abstract ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
-        @RequestParam Long lastQuestionId,
-        @RequestParam String categoryTitle
+    public abstract ResponseEntity<List<DiagnosisQuestionResponse>> handleDiagnosisQuestion(
+//        @RequestParam Long lastQuestionId,
+//        @RequestParam String categoryTitle
+        int page
     );
 
     @Operation(summary = "질문 제출", description = "선택한 질문의 응답 제출")

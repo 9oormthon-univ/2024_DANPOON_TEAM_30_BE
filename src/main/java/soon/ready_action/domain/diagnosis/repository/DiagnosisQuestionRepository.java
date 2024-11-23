@@ -73,4 +73,8 @@ public class DiagnosisQuestionRepository {
     ) {
         return diagnosisQuestionJpaRepository.determineHasNextPage(paginatedDiagnosisQuestion);
     }
+
+    public List<DiagnosisQuestionResponse> getNumberingPagination(int page) {
+        return diagnosisQuestionJpaRepository.getNumberingPagination(page);
+    }
 }
