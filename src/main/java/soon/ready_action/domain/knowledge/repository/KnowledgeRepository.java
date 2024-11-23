@@ -10,11 +10,8 @@ import java.util.List;
 
 public interface KnowledgeRepository extends JpaRepository<Knowledge, Long> {
 
-    @Query("SELECT k FROM Knowledge k WHERE k.category.id = :categoryId AND k.id < :lastKnowledgeId ORDER BY k.id DESC")
-    List<Knowledge> findKnowledgeAfterId(@Param("categoryId") Long categoryId, @Param("lastKnowledgeId") Long lastKnowledgeId, Pageable pageable);
-
-    @Query("SELECT k FROM Knowledge k WHERE k.category.id = :categoryId ORDER BY k.id DESC")
-    List<Knowledge> findFirstKnowledge(@Param("categoryId") Long categoryId, Pageable pageable);
+    @Query("SELECT k FROM Knowledge k WHERE k.category.title = :categoryTitle ORDER BY k.id DESC")
+    List<Knowledge> findKnowledgeByCategoryTitle(@Param("categoryTitle") String categoryTitle, Pageable pageable);
 
     // 최신 3개의 자립 지식 조회
     List<Knowledge> findTop3ByOrderByIdDesc();
