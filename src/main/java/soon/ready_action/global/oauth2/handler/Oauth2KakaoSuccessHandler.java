@@ -52,12 +52,15 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_FOUND);
         response.setHeader("Location",
-            redirectUrl + "&accessToken=" + authResponse.accessToken() + "&refreshToken="
+            redirectUrl + "?accessToken=" + authResponse.accessToken() + "&refreshToken="
                 + authResponse.refreshToken());
 
-        response.getWriter().write(
-            customObjectMapperProvider.getObjectMapper().writeValueAsString(authResponse)
-        );
+        log.info("redirectUrl: {}", redirectUrl + "?accessToken=" + authResponse.accessToken() + "&refreshToken="
+            + authResponse.refreshToken());
+
+//        response.getWriter().write(
+//            customObjectMapperProvider.getObjectMapper().writeValueAsString(authResponse)
+//        );
     }
 
     private CustomOAuth2Member extractOAuth2Member(Authentication authentication) {
