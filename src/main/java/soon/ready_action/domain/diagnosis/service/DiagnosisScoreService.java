@@ -91,4 +91,9 @@ public class DiagnosisScoreService {
                 .build();
         }
     }
+
+    // 사용자의 자가진단 총 점수 계산
+    public int getTotalScoreByMemberId(Long memberId) {
+        return scoreRepository.getTotalScoreByMemberId(memberId);
+    }
 }

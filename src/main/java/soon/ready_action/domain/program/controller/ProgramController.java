@@ -1,5 +1,6 @@
 package soon.ready_action.domain.program.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/programs")
+@Tag(name = "Program Controller", description = "Program API")
 public class ProgramController {
 
     private final ProgramService programService;
