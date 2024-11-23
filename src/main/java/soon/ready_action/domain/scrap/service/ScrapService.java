@@ -78,19 +78,17 @@ public class ScrapService {
                 .collect(Collectors.toList());
     }
 
+    // 스크랩한 프로그램 조회
     @Transactional(readOnly = true)
-    public ScrapProgramResponse getScrappedPrograms(int size, Long lastProgramId) {
+    public ScrapProgramResponse getScrappedPrograms(int page) {
         Long memberId = TokenService.getLoginMemberId();
 
-        Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "program.id"));
-        Page<Scrap> scrapPage;
+        Pageable pageable = PageRequest.of(page - 1, 5, Sort.by(Sort.Direction.DESC, "program.id"));
 
-        if (lastProgramId == null) {
-            scrapPage = scrapRepository.findByMemberId(memberId, pageable);
-        } else {
-            scrapPage = scrapRepository.findByMemberIdAndProgramIdLessThan(memberId, lastProgramId, pageable);
-        }
+        // 페이지 처리하여 스크랩된 프로그램 조회
+        Page<Scrap> scrapPage = scrapRepository.findByMemberId(memberId, pageable);
 
+        // 스크랩된 프로그램 데이터를 리스트로 변환
         List<ScrapProgramResponse.ScrapProgramSearchResult> result = scrapPage.getContent().stream()
                 .map(scrap -> new ScrapProgramResponse.ScrapProgramSearchResult(
                         scrap.getProgram().getId(),
@@ -103,9 +101,7 @@ public class ScrapService {
                 ))
                 .collect(Collectors.toList());
 
-        boolean hasNextPage = scrapPage.hasNext();
-
-        return new ScrapProgramResponse(result, scrapPage.getNumberOfElements(), hasNextPage);
+        // 전체 페이지가 아닌, 해당 페이지의 데이터만 반환
+        return new ScrapProgramResponse(result);
     }
-
 }

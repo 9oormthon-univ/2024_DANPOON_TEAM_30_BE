@@ -1,11 +1,14 @@
 package soon.ready_action.domain.main.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.diagnosis.service.DiagnosisScoreService;
 import soon.ready_action.domain.main.dto.response.MainResponse;
 import soon.ready_action.domain.membercategory.service.MemberCategoryService;
+import soon.ready_action.domain.program.dto.response.ProgramResponse;
 import soon.ready_action.domain.program.service.ProgramService;
 import soon.ready_action.domain.knowledge.service.KnowledgeService;
 import soon.ready_action.domain.program.dto.response.ProgramResponse.ProgramContent;
@@ -33,8 +36,11 @@ public class MainService {
                 .map(Category::getId)
                 .collect(Collectors.toList());
 
-        // 해당 카테고리의 최신 프로그램 3개 조회
-        List<ProgramContent> programContents = programService.getLatestProgramsByCategories(categoryIds);
+        // Pageable 객체 생성 (최대 3개 프로그램)
+        Pageable pageable = PageRequest.of(0, 3); // 0번째 페이지, 3개 항목
+
+        // 해당 카테고리의 최신 프로그램 3개 조회 (DetailResponse 사용)
+        List<ProgramResponse.DetailResponse> programDetails = programService.getLatestProgramsByCategories(categoryIds, pageable, memberId);
 
         // 최신 3개의 자립 지식 조회
         List<KnowledgeContent> knowledgeContents = knowledgeService.getLatestKnowledge();
@@ -44,7 +50,7 @@ public class MainService {
         String selfDiagnosis = getDiagnosisLevel(diagnosisScore);
 
         // MainResponse 반환
-        return new MainResponse(programContents, knowledgeContents, selfDiagnosis);
+        return new MainResponse(programDetails, knowledgeContents, selfDiagnosis);
     }
 
     // 자가진단 점수를 범위에 따라 캐릭터 타입 반환

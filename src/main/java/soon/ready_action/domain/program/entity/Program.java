@@ -20,7 +20,7 @@ public class Program {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String description;
 
     @Column(nullable = false)
@@ -32,7 +32,7 @@ public class Program {
     @Enumerated(EnumType.STRING)
     private ProgramStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String applicationUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -31,16 +31,13 @@ public class ProgramService {
 
     // 전체 조회
     @Transactional(readOnly = true)
-    public ProgramResponse getProgramsByCategory(Long categoryId, int size, Long lastProgramId) {
-        List<Program> programs;
+    public ProgramResponse getProgramsByCategory(String categoryTitle, int page) {
         Long memberId = TokenService.getLoginMemberId(); // 로그인된 회원 ID 가져오기
 
-        Pageable pageable = PageRequest.of(0, size);
-        if (lastProgramId == null) {
-            programs = programRepository.findFirstPrograms(categoryId, pageable);
-        } else {
-            programs = programRepository.findProgramsAfterId(categoryId, lastProgramId, pageable);
-        }
+        Pageable pageable = PageRequest.of(page - 1, 5); // 페이지는 1부터 시작하므로, 1을 빼서 0부터 시작하도록 설정
+
+        // 해당 카테고리의 프로그램 조회
+        List<Program> programs = programRepository.findByCategoryTitle(categoryTitle, pageable);
 
         // 사용자가 스크랩한 프로그램 ID 조회
         List<Long> scrappedProgramIds = scrapService.getScrappedProgramIds(memberId);
@@ -58,10 +55,9 @@ public class ProgramService {
                 ))
                 .collect(Collectors.toList());
 
-        String categoryTitle = programs.isEmpty() ? "" : programs.get(0).getCategory().getTitle();
-        boolean hasNextPage = programs.size() == size;
+        String categoryTitleResponse = programs.isEmpty() ? "" : programs.get(0).getCategory().getTitle();
 
-        return new ProgramResponse(programContents, categoryTitle, hasNextPage);
+        return new ProgramResponse(programContents, categoryTitleResponse); // boolean 제외하고 반환
     }
 
     // 상세 조회
@@ -90,15 +86,17 @@ public class ProgramService {
 
     // 검색
     @Transactional(readOnly = true)
-    public ProgramSearchResponse searchPrograms(String keyword, int size, Long lastProgramId) {
+    public ProgramSearchResponse searchPrograms(String keyword, int page) {
         Long memberId = TokenService.getLoginMemberId(); // JWT에서 로그인된 회원 ID 추출
 
-        Pageable pageable = PageRequest.of(0, size);
-        List<Program> programs = programRepository.searchProgramsByTitleWithLastProgramId(keyword, lastProgramId, pageable);
+        // 페이지는 1부터 시작하므로, 1을 빼서 0부터 시작하도록 설정
+        Pageable pageable = PageRequest.of(page - 1, 5); // size를 5로 고정
+        List<Program> programs = programRepository.findByTitleContaining(keyword, pageable); // 제목으로 프로그램 검색
 
         // 사용자가 스크랩한 프로그램 ID 조회
         List<Long> scrappedProgramIds = scrapService.getScrappedProgramIds(memberId);
 
+        // 검색 결과 리스트 매핑
         List<ProgramSearchResponse.SearchResult> searchResults = programs.stream()
                 .map(program -> new ProgramSearchResponse.SearchResult(
                         program.getId(),
@@ -106,14 +104,12 @@ public class ProgramService {
                         program.getStartDate(),
                         program.getEndDate(),
                         program.getProgramStatus(),
-                        scrappedProgramIds.contains(program.getId()),
+                        scrappedProgramIds.contains(program.getId()), // 스크랩 여부
                         program.getCategory().getTitle()
                 ))
                 .collect(Collectors.toList());
 
-        boolean hasNextPage = programs.size() == size;
-
-        return new ProgramSearchResponse(searchResults, programRepository.countProgramsByTitle(keyword), hasNextPage);
+        return new ProgramSearchResponse(searchResults);
     }
 
     public List<DetailResponse> recommendRandomProgram(List<CalculateDiagnosisResult> results) {
@@ -142,29 +138,27 @@ public class ProgramService {
                 })
             .toList();
     }
-    // 카테고리에 해당하는 최신 3개의 프로그램 조회
-    public List<ProgramResponse.ProgramContent> getLatestProgramsByCategories(List<Long> categoryIds) {
-        List<Program> programs;
 
-        if (categoryIds == null || categoryIds.isEmpty()) {
-            // 전체 프로그램에서 최신 3개 조회
-            programs = programRepository.findTop3ByOrderByStartDateDesc();
-        } else {
-            // 특정 카테고리에 해당하는 최신 3개 프로그램 조회
-            programs = programRepository.findTop3ByCategoryIdInOrderByStartDateDesc(categoryIds);
-        }
+    // 카테고리 리스트에 해당하는 최신 프로그램 3개 조회
+    public List<ProgramResponse.DetailResponse> getLatestProgramsByCategories(List<Long> categoryIds, Pageable pageable, Long memberId) {
+        // 프로그램 조회 (Pageable을 고려하여 변경)
+        List<Program> programs = programRepository.findTop3ByCategoryIdsOrderByStartDateDesc(categoryIds, pageable);
 
-        Long memberId = TokenService.getLoginMemberId();
+        // 사용자가 스크랩한 프로그램 ID 목록 가져오기
+        List<Long> scrappedProgramIds = scrapService.getScrappedProgramIds(memberId);
 
+        // 프로그램 리스트를 DetailResponse로 변환하여 반환
         return programs.stream()
-                .map(program -> new ProgramResponse.ProgramContent(
+                .map(program -> new ProgramResponse.DetailResponse(
                         program.getId(),
                         program.getTitle(),
+                        program.getDescription(),
                         program.getStartDate(),
                         program.getEndDate(),
-                        program.getStatus(),
+                        program.getProgramStatus(),
                         program.getApplicationUrl(),
-                        scrapService.getScrappedProgramIds(memberId).contains(program.getId())
+                        program.getCategory().getTitle(),
+                        scrappedProgramIds.contains(program.getId()) // 실제 스크랩 여부 체크
                 ))
                 .collect(Collectors.toList());
     }

@@ -27,8 +27,7 @@ public class Knowledge {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -31,11 +31,10 @@ public class KnowledgeController {
     })
     @GetMapping
     public ResponseEntity<KnowledgeResponse> getKnowledgeByCategory(
-            @RequestParam Long categoryId,
-            @RequestParam int size,
-            @RequestParam(required = false) Long lastKnowledgeId
+            @RequestParam String categoryTitle,
+            @RequestParam int page
     ) {
-        KnowledgeResponse response = knowledgeService.getKnowledgeByCategory(categoryId, size, lastKnowledgeId);
+        KnowledgeResponse response = knowledgeService.getKnowledgeByCategory(categoryTitle, page);
         return ResponseEntity.ok(response);
     }
 
