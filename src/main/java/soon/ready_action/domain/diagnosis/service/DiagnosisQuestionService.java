@@ -57,5 +57,9 @@ public class DiagnosisQuestionService {
             .hasNext(hasNext)
             .build();
     }
+
+    public List<DiagnosisQuestionResponse> getNumberingPagination(int page) {
+        return questionRepository.getNumberingPagination(page);
+    }
 }
 

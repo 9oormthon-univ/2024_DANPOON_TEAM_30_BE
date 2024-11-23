@@ -1,6 +1,7 @@
 package soon.ready_action.domain.diagnosis.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionPaginationResponseWrapper;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisQuestionResponse;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultDTO;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.domain.diagnosis.service.DiagnosisQuestionService;
@@ -26,11 +28,13 @@ public class DiagnosisController extends DiagnosisDocsController {
 
     @Override
     @GetMapping("/questions")
-    public ResponseEntity<DiagnosisQuestionPaginationResponseWrapper> handleDiagnosisQuestion(
-        @RequestParam Long lastQuestionId,
-        @RequestParam String categoryTitle
+    public ResponseEntity<List<DiagnosisQuestionResponse>> handleDiagnosisQuestion(
+//        @RequestParam Long lastQuestionId,
+//        @RequestParam String categoryTitle
+        @RequestParam int page
     ) {
-        var wrapper = questionService.getPagedDiagnosisQuestion(lastQuestionId, categoryTitle);
+//        var wrapper = questionService.getPagedDiagnosisQuestion(lastQuestionId, categoryTitle);
+        var wrapper = questionService.getNumberingPagination(page - 1);
 
         return ResponseEntity.ok(wrapper);
     }
