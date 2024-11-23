@@ -125,10 +125,9 @@ public class ProgramController {
     })
     @GetMapping("/scraps")
     public ResponseEntity<ScrapProgramResponse> getScrappedPrograms(
-            @RequestParam int size,
-            @RequestParam(required = false) Long lastProgramId
+            @RequestParam int page
     ) {
-        ScrapProgramResponse response = scrapService.getScrappedPrograms(size, lastProgramId);
+        ScrapProgramResponse response = scrapService.getScrappedPrograms(page);
         return ResponseEntity.ok(response);
     }
 }
