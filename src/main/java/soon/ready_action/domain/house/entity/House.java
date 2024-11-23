@@ -1,32 +1,66 @@
 package soon.ready_action.domain.house.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "house")
 public class House {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long housingId; // 주거 아이디
+    @Column(name = "house_id")
+    private Long id;
 
-    private String cortarNo; // 법정동 코드
-    private String rletTpNm; // 주택 유형 이름
-    private String tradTpNm; // 거래 유형 이름
-    private String prc; // 가격
-    private String spc1; // 공급면적
-    private Double spc2; // 전용면적
-    private String direction; // 주택 방향
-    private Double lat; // 위도
-    private Double lng; // 경도
-    private String atclFetrDesc; // 부동산 특징 설명
-    private String rltrNm; // 부동산 이름
-    private String fullAddress; // 전체 주소
-    private String region1depthName; // 시/도
-    private String region2depthName; // 시/군/구
-    private String roadAddressName; // 도로명 주소
+    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private RentalType rentalType; // 임대 유형 (enum)
+
+    private Long price; // 가격
+
+    private String supplyArea; // 공급 면적 spc1
+
+    private Double exclusiveArea; // 전용 면적 spc2
+
+    private String direction; // 방향
+
+    private Double latitude; // 위도
+
+    private Double longitude; // 경도
+
+    private String features; // 부동산 특징
+
+    private String realtorName; // 부동산 이름
+
+    private String roadAddress; // 도로명 주소
+
+    private String city;
+
+    private String county;
+
+    @Builder
+    public House(String type, RentalType rentalType, Long price, String supplyArea,
+        Double exclusiveArea, String direction, Double latitude, Double longitude, String features,
+        String realtorName, String roadAddress, String city, String county) {
+        this.type = type;
+        this.rentalType = rentalType;
+        this.price = price;
+        this.supplyArea = supplyArea;
+        this.exclusiveArea = exclusiveArea;
+        this.direction = direction;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.features = features;
+        this.realtorName = realtorName;
+        this.roadAddress = roadAddress;
+        this.city = city;
+        this.county = county;
+    }
 }

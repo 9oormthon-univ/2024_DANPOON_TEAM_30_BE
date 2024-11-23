@@ -14,7 +14,9 @@ public enum ErrorCode {
     CHARACTER_TYPE_NOT_FOUND(404, "캐릭터 타입을 찾을 수 없습니다."),
     BADGE_NOT_FOUND(404, "배지를 찾을 수 없습니다."),
     AUTHORIZATION_DENIED(403, "접근이 거부되었습니다. 권한을 확인하세요."),
-    INVALID_TOKEN(401, "유효하지 않은 토큰입니다.");
+    INVALID_TOKEN(401, "유효하지 않은 토큰입니다."),
+    RENTAL_TYPE_NOT_FOUND(404, "임대 타입을 찾을 수 없습니다."),
+    ;
 
     private final int status;
     private final String message;

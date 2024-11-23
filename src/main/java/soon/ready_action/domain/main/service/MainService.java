@@ -41,9 +41,26 @@ public class MainService {
 
         // 자가진단 점수 확인
         int diagnosisScore = diagnosisScoreService.getTotalScoreByMemberId(memberId);
-        String selfDiagnosis = (diagnosisScore > 0) ? "자가진단 점수: " + diagnosisScore : "자가진단 안 함";
+        String selfDiagnosis = getDiagnosisLevel(diagnosisScore);
 
         // MainResponse 반환
         return new MainResponse(programContents, knowledgeContents, selfDiagnosis);
+    }
+
+    // 자가진단 점수를 범위에 따라 캐릭터 타입 반환
+    private String getDiagnosisLevel(int diagnosisScore) {
+        if (diagnosisScore >= 0 && diagnosisScore <= 9) {
+            return "ONE";
+        } else if (diagnosisScore >= 10 && diagnosisScore <= 19) {
+            return "TWO";
+        } else if (diagnosisScore >= 20 && diagnosisScore <= 29) {
+            return "THREE";
+        } else if (diagnosisScore >= 30 && diagnosisScore <= 39) {
+            return "FOUR";
+        } else if (diagnosisScore >= 40 && diagnosisScore <= 50) {
+            return "FIVE";
+        } else {
+            return "자가진단 점수 범위 초과 에러";
+        }
     }
 }

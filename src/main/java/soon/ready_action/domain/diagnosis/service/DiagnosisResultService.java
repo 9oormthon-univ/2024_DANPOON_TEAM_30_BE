@@ -13,6 +13,7 @@ import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
 import soon.ready_action.domain.diagnosis.dto.CalculateDiagnosisResult;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
+import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultDTO;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
 import soon.ready_action.domain.diagnosis.entity.AnswerType;
 import soon.ready_action.domain.diagnosis.entity.DiagnosisQuestion;
@@ -116,5 +117,26 @@ public class DiagnosisResultService {
             .results(results)
             .programs(detailResponses)
             .build();
+    }
+
+    @Transactional
+    public DiagnosisResultDTO getDiagnosisResultWithBadges() {
+        Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
+
+        String characterName = loginMember.getCharacterType().getKor();
+        List<Category> categories = categoryRepository.findAll();
+
+        // 진단 결과 계산
+        List<CalculateDiagnosisResult> results = scoreService.calculateScore(categories, loginMember.getId());
+
+        // 뱃지 리스트 가져오기
+        List<BadgeType> badges = badgeService.getBadgeTypeByMember(loginMember);
+
+        // DiagnosisResult DTO로 반환
+        return DiagnosisResultDTO.builder()
+                .characterType(characterName)
+                .results(results)
+                .badges(badges)
+                .build();
     }
 }
