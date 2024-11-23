@@ -36,11 +36,10 @@ public class ProgramController {
     })
     @GetMapping
     public ResponseEntity<ProgramResponse> getProgramsByCategory(
-            @RequestParam Long categoryId,
-            @RequestParam int size,
-            @RequestParam(required = false) Long lastProgramId
+            @RequestParam String categoryTitle,
+            @RequestParam int page
     ) {
-        ProgramResponse response = programService.getProgramsByCategory(categoryId, size, lastProgramId);
+        ProgramResponse response = programService.getProgramsByCategory(categoryTitle, page);
         return ResponseEntity.ok(response);
     }
 
@@ -67,12 +66,11 @@ public class ProgramController {
     @GetMapping("/search")
     public ResponseEntity<Object> searchPrograms(
             @RequestParam String keyword,
-            @RequestParam int size,
-            @RequestParam(required = false) Long lastProgramId
+            @RequestParam int page
     ) {
-        ProgramSearchResponse response = programService.searchPrograms(keyword, size, lastProgramId);
+        ProgramSearchResponse response = programService.searchPrograms(keyword, page);
 
-        if (response.getData().isEmpty()) {
+        if (response.getSearchResults().isEmpty()) {
             return ResponseEntity.ok(
                     Map.of(
                             "message", "일치하는 프로그램이 없습니다."
@@ -80,8 +78,9 @@ public class ProgramController {
             );
         }
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response); // 검색 결과 반환
     }
+
 
     // 스크랩
     @Operation(summary = "프로그램 스크랩", description = "프로그램을 스크랩")
