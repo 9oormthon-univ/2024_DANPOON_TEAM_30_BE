@@ -51,7 +51,9 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_FOUND);
-        response.setHeader("Location", redirectUrl);
+        response.setHeader("Location",
+            redirectUrl + "&accessToken=" + authResponse.accessToken() + "&refreshToken="
+                + authResponse.refreshToken());
 
         response.getWriter().write(
             customObjectMapperProvider.getObjectMapper().writeValueAsString(authResponse)
@@ -61,7 +63,6 @@ public class Oauth2KakaoSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private CustomOAuth2Member extractOAuth2Member(Authentication authentication) {
         return (CustomOAuth2Member) authentication.getPrincipal();
     }
-
 
     private String determineRedirectUrl(CustomOAuth2Member oAuth2Member) {
         // TODO 도메인 구매 시 변경 + 프론트 구현 시 변경
