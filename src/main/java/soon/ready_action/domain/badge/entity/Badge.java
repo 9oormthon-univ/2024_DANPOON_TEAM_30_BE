@@ -35,8 +35,15 @@ public class Badge {
     private Member member;
 
     @Builder
-    public Badge(BadgeType type, Member member) {
+    private Badge(BadgeType type, Member member) {
         this.type = type;
         this.member = member;
+    }
+
+    public static Badge create(String categoryTitle, Member member) {
+        return Badge.builder()
+            .type(BadgeType.of(categoryTitle))
+            .member(member)
+            .build();
     }
 }

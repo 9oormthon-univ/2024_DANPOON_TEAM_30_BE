@@ -30,7 +30,7 @@ public class BadgeService {
             categories, member.getId()
         );
 
-        List<BadgeType> existingBadgeTypes = badgeRepository.findBadgeTypesByMemberId(member);
+        List<BadgeType> existingBadgeTypes = badgeRepository.findByMember(member);
 
         results.stream()
             .filter(this::isStandardScore)
@@ -40,7 +40,7 @@ public class BadgeService {
 
     @Transactional(readOnly = true)
     public List<BadgeType> getBadgeTypeByMember(Member member) {
-        return badgeRepository.findBadgeTypesByMemberId(member);
+        return badgeRepository.findByMember(member);
     }
 
     private boolean isStandardScore(CalculateDiagnosisResult result) {
@@ -48,11 +48,7 @@ public class BadgeService {
     }
 
     private void createAndSaveBadge(Member member, CalculateDiagnosisResult result) {
-        Badge badge = Badge.builder()
-            .type(BadgeType.of(result.categoryTitle()))
-            .member(member)
-            .build();
-
+        Badge badge = Badge.create(result.categoryTitle(), member);
         badgeRepository.save(badge);
     }
 }

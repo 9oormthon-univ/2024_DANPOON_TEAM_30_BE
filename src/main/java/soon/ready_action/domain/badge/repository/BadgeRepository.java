@@ -17,7 +17,7 @@ public class BadgeRepository {
         badgejpaRepository.save(badge);
     }
 
-    public List<BadgeType> findBadgeTypesByMemberId(Member member) {
-        return badgejpaRepository.findBadgeTypesByMemberId(member);
+    public List<BadgeType> findByMember(Member member) {
+        return badgejpaRepository.findByMember(member);
     }
 }

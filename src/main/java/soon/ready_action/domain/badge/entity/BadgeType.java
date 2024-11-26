@@ -1,5 +1,6 @@
 package soon.ready_action.domain.badge.entity;
 
+import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import soon.ready_action.global.exception.BadgeNotFoundException;
@@ -17,11 +18,9 @@ public enum BadgeType {
     private final String type;
 
     public static BadgeType of(String type) {
-        for (BadgeType value : values()) {
-            if (value.type.equals(type)) {
-                return value;
-            }
-        }
-        throw new BadgeNotFoundException();
+        return Arrays.stream(BadgeType.values())
+            .filter(badge -> badge.type.equals(type))
+            .findAny()
+            .orElseThrow(BadgeNotFoundException::new);
     }
 }
