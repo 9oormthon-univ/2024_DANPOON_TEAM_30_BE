@@ -1,5 +1,6 @@
 package soon.ready_action.domain.auth.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +24,17 @@ public class AuthController extends AuthDocsController {
     @Override
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponse> reissueToken(
-        @RequestBody ReissueTokenRequest reissueTokenRequest) {
+        @RequestBody @Valid ReissueTokenRequest reissueTokenRequest
+    ) {
         TokenResponse tokenResponse = authService.reissueToken(reissueTokenRequest);
         return ResponseEntity.ok(tokenResponse);
     }
 
     @Override
     @PutMapping("/signup")
-    public ResponseEntity<OnboardingWrapperResponse> signup(@RequestBody MemberAdditionalInfoRequest request) {
+    public ResponseEntity<OnboardingWrapperResponse> signup(
+        @RequestBody @Valid MemberAdditionalInfoRequest request
+    ) {
         OnboardingWrapperResponse onboardingWrapperResponse = authService.signup(request);
 
         return ResponseEntity.ok(onboardingWrapperResponse);
