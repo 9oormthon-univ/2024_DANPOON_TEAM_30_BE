@@ -19,8 +19,8 @@ public class HouseController extends HouseDocsController {
 
     @GetMapping
     public ResponseEntity<List<HouseResponse>> handleHouse(
-        @RequestParam String county,
-        @RequestParam String city
+        @RequestParam String city,
+        @RequestParam String county
     ) {
         List<HouseResponse> house = houseService.getHouseByCityAndCounty(city, county);
 

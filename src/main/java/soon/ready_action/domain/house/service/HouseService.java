@@ -1,12 +1,10 @@
 package soon.ready_action.domain.house.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import soon.ready_action.domain.house.dto.request.HouseFilterRequest;
 import soon.ready_action.domain.house.dto.response.HouseResponse;
 import soon.ready_action.domain.house.entity.House;
-
-import java.util.List;
 import soon.ready_action.domain.house.repository.HouseRepository;
 
 @Service
@@ -21,22 +19,7 @@ public class HouseService {
         );
 
         return houses.stream()
-            .map(house -> {
-                return HouseResponse.builder()
-                    .type(house.getType())
-                    .rentalType(house.getRentalType().getType())
-                    .price(house.getPrice())
-                    .supplyArea(house.getSupplyArea())
-                    .exclusiveArea(house.getExclusiveArea())
-                    .direction(house.getDirection())
-                    .latitude(house.getLatitude())
-                    .longitude(house.getLongitude())
-                    .features(house.getFeatures())
-                    .realtorName(house.getRealtorName())
-                    .roadAddress(house.getRoadAddress())
-                    .city(house.getCity())
-                    .county(house.getCounty())
-                    .build();
-            }).toList();
+            .map(HouseResponse::of)
+            .toList();
     }
 }

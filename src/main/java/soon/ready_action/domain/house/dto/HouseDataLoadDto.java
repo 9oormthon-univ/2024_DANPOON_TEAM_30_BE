@@ -16,8 +16,7 @@ public record HouseDataLoadDto(
     String rltrNm, //부동산 이 름
     String road_address_name, // 도로명 주소
     String region_1depth_name,
-    String region_2depth_name,
-    String region_3depth_name
+    String region_2depth_name
 ) {
 
 }
