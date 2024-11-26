@@ -42,8 +42,9 @@ public class AuthService {
             throw new JwtException("invalid refreshToken");
         }
 
-        TokenResponse tokenResponse = tokenProvider.reissueToken(memberId, member.getRole(),
-            refreshToken);
+        TokenResponse tokenResponse = tokenProvider.reissueToken(
+            member.getId(), member.getRole(), refreshToken
+        );
         member.updateRefreshToken(tokenResponse.refreshToken());
 
         return tokenResponse;
@@ -59,8 +60,9 @@ public class AuthService {
         }
 
         // 토큰 권한 초기화를 위한 재발급
-        TokenResponse tokenResponse = tokenProvider.reissueToken(member.getId(), member.getRole(),
-            member.getRefreshToken());
+        TokenResponse tokenResponse = tokenProvider.reissueToken(
+            member.getId(), member.getRole(), member.getRefreshToken()
+        );
 
         member.updateAdditionalInfo(
             request.nickname(),

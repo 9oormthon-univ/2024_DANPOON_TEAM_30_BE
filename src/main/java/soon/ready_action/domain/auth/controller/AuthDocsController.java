@@ -41,5 +41,7 @@ public abstract class AuthDocsController {
         @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "400", description = "request 값이 잘못된 경우", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public abstract ResponseEntity<OnboardingWrapperResponse> signup(MemberAdditionalInfoRequest request);
+    public abstract ResponseEntity<OnboardingWrapperResponse> signup(
+        MemberAdditionalInfoRequest request
+    );
 }
