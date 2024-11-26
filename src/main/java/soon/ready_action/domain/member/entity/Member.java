@@ -41,10 +41,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private CharacterType characterType;
 
-    @Column(name = "social_type")
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType;
-
     @Builder
     public Member(String kakaoId) {
         this.nickname = "";
@@ -63,8 +59,9 @@ public class Member {
         return this.refreshToken.equals(refreshToken);
     }
 
-    public void updateAdditionalInfo(String nickname, LocalDate birthday, String refreshToken,
-        Role role) {
+    public void updateAdditionalInfo(
+        String nickname, LocalDate birthday, String refreshToken, Role role
+    ) {
         this.nickname = nickname;
         this.birthday = birthday;
         this.refreshToken = refreshToken;
