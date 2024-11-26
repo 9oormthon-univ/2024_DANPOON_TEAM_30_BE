@@ -26,7 +26,9 @@ public class DiagnosisResultRepository {
         );
     }
 
-    public List<DiagnosisResult> findByMemberAndQuestions(List<DiagnosisQuestion> question, Member member) {
+    public List<DiagnosisResult> findByMemberAndQuestions(
+        List<DiagnosisQuestion> question, Member member
+    ) {
         return jpaRepository.findByMemberAndQuestionIn(member, question);
     }
 }

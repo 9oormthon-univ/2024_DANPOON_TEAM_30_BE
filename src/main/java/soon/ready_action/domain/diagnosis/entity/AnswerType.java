@@ -1,8 +1,11 @@
 package soon.ready_action.domain.diagnosis.entity;
 
+import java.util.Arrays;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import soon.ready_action.global.exception.AnswerTypeNotFoundException;
 
+@RequiredArgsConstructor
 @Getter
 public enum AnswerType {
 
@@ -10,16 +13,10 @@ public enum AnswerType {
 
     private final Boolean selected;
 
-    AnswerType(Boolean selected) {
-        this.selected = selected;
-    }
-
     public static AnswerType from(Boolean selected) {
-        for (AnswerType answerType : values()) {
-            if (answerType.selected == selected) { // null-safe 비교
-                return answerType;
-            }
-        }
-        throw new AnswerTypeNotFoundException();
+        return Arrays.stream(values())
+            .filter(answerType -> answerType.selected.equals(selected))
+            .findAny()
+            .orElseThrow(AnswerTypeNotFoundException::new);
     }
 }

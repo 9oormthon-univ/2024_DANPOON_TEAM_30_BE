@@ -2,7 +2,6 @@ package soon.ready_action.domain.diagnosis.repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +21,6 @@ public class DiagnosisQuestionRepository {
         return diagnosisQuestionJpaRepository.count();
     }
 
-    public void save(DiagnosisQuestion diagnosisQuestion) {
-        diagnosisQuestionJpaRepository.save(diagnosisQuestion);
-    }
-
     @Transactional
     public void onboardingQuestionSave(String content, Category category) {
         DiagnosisQuestion onboardQuestion = DiagnosisQuestion.builder()
@@ -34,6 +29,7 @@ public class DiagnosisQuestionRepository {
             .isOnboardingQuestion(true)
             .category(category)
             .build();
+
         diagnosisQuestionJpaRepository.save(onboardQuestion);
     }
 
@@ -56,7 +52,7 @@ public class DiagnosisQuestionRepository {
             .orElseThrow(DiagnosisQuestionNotFoundException::new);
     }
 
-    public List<DiagnosisQuestion> findAllById(Set<Long> ids) {
+    public List<DiagnosisQuestion> findAllById(List<Long> ids) {
         return diagnosisQuestionJpaRepository.findAllById(ids);
     }
 
@@ -72,9 +68,5 @@ public class DiagnosisQuestionRepository {
         List<DiagnosisQuestionResponse> paginatedDiagnosisQuestion
     ) {
         return diagnosisQuestionJpaRepository.determineHasNextPage(paginatedDiagnosisQuestion);
-    }
-
-    public List<DiagnosisQuestionResponse> getNumberingPagination(int page) {
-        return diagnosisQuestionJpaRepository.getNumberingPagination(page);
     }
 }

@@ -27,7 +27,9 @@ public class DiagnosisQuestionService {
     ) {
         List<Category> categories = categoryRepository.findCategoriesByTitles(categoriesAsString);
 
-        return categories.stream().map(this::buildOnboardingResponseForCategory).toList();
+        return categories.stream()
+            .map(this::buildOnboardingResponseForCategory)
+            .toList();
     }
 
     private OnboardingQuestionResponse buildOnboardingResponseForCategory(Category category) {
@@ -56,10 +58,6 @@ public class DiagnosisQuestionService {
             .questions(pagedDiagnosisQuestion)
             .hasNext(hasNext)
             .build();
-    }
-
-    public List<DiagnosisQuestionResponse> getNumberingPagination(int page) {
-        return questionRepository.getNumberingPagination(page);
     }
 }
 

@@ -12,6 +12,7 @@ import soon.ready_action.domain.badge.service.BadgeService;
 import soon.ready_action.domain.category.entity.Category;
 import soon.ready_action.domain.category.repository.CategoryRepository;
 import soon.ready_action.domain.diagnosis.dto.CalculateDiagnosisResult;
+import soon.ready_action.domain.diagnosis.dto.CategoryWithDiagnosis;
 import soon.ready_action.domain.diagnosis.dto.request.CategoryWithDiagnosisRequest;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultDTO;
 import soon.ready_action.domain.diagnosis.dto.response.DiagnosisResultWrapper;
@@ -41,16 +42,19 @@ public class DiagnosisResultService {
 
     @Transactional
     public void saveDiagnosisResults(CategoryWithDiagnosisRequest request) {
-        Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
-        Map<Long, Boolean> questionResult = request.questionResult();
-        List<DiagnosisQuestion> questions = questionRepository.findAllById(questionResult.keySet());
+        Member loginMember = getLoginMember();
+        List<Long> questionIds = CategoryWithDiagnosisRequest.toQuestionIds(request);
+        List<DiagnosisQuestion> questions = questionRepository.findAllById(questionIds);
 
         List<DiagnosisResult> results = processDiagnosisResults(
-            questions, loginMember, questionResult
+            questions, loginMember, request.categoryWithDiagnosis()
         );
-
         resultRepository.saveAll(results);
 
+        processMemberProgress(loginMember);
+    }
+
+    private void processMemberProgress(Member loginMember) {
         int totalScore = scoreService.calculateAndSaveDiagnosisScores(loginMember.getId());
         badgeService.awardBadgesForStandardScores(loginMember);
         loginMember.updateCharacterType(totalScore);
@@ -58,33 +62,47 @@ public class DiagnosisResultService {
 
     private List<DiagnosisResult> processDiagnosisResults(
         List<DiagnosisQuestion> questions,
-        Member loginMember, Map<Long, Boolean> questionResult
+        Member loginMember,
+        List<CategoryWithDiagnosis> request
     ) {
-        Map<Long, DiagnosisResult> existingResults = resultRepository
-            .findByMemberAndQuestions(questions, loginMember)
-            .stream()
-            .collect(Collectors.toMap(result -> result.getQuestion().getId(), result -> result));
+        Map<Long, DiagnosisResult> existingResults = mapExistingResults(questions, loginMember);
 
         return questions.stream()
-            .map(question -> updateOrCreateDiagnosisResult(
-                question, loginMember, questionResult, existingResults
-            )).toList();
+            .flatMap(question -> request.stream()
+                .map(categoryWithDiagnosis ->
+                    updateOrCreateDiagnosisResult(
+                        question, loginMember, categoryWithDiagnosis, existingResults
+                    )
+                )
+            )
+            .toList();
+    }
+
+    private Map<Long, DiagnosisResult> mapExistingResults(
+        List<DiagnosisQuestion> questions,
+        Member loginMember
+    ) {
+        return resultRepository.findByMemberAndQuestions(questions, loginMember).stream()
+            .collect(Collectors.toMap(
+                result -> result.getQuestion().getId(),
+                result -> result
+            ));
     }
 
     private DiagnosisResult updateOrCreateDiagnosisResult(
         DiagnosisQuestion question,
-        Member loginMember, Map<Long, Boolean> questionResult,
+        Member loginMember,
+        CategoryWithDiagnosis request,
         Map<Long, DiagnosisResult> existingResults
     ) {
         DiagnosisResult result = existingResults.get(question.getId());
-        Boolean answer = questionResult.get(question.getId());
+        Boolean answer = request.questionResult();
 
         if (result != null) {
             result.updateAnswerType(AnswerType.from(answer));
             return result;
-        } else {
-            return createDiagnosisResult(question, loginMember, answer);
         }
+        return createDiagnosisResult(question, loginMember, answer);
     }
 
     private DiagnosisResult createDiagnosisResult(
@@ -100,19 +118,17 @@ public class DiagnosisResultService {
     }
 
     public DiagnosisResultWrapper getDiagnosisResult() {
-        Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
+        Member loginMember = getLoginMember();
 
         String characterName = loginMember.getCharacterType().getKor();
         List<Category> categories = categoryRepository.findAll();
 
-        List<CalculateDiagnosisResult> results = scoreService.calculateScore(
-            categories, loginMember.getId()
-        );
-
+        List<CalculateDiagnosisResult> results = scoreService.calculateScore(categories,
+            loginMember.getId());
         List<DetailResponse> detailResponses = programService.recommendRandomProgram(results);
 
         return DiagnosisResultWrapper.builder()
-            .characterType( characterName)
+            .characterType(characterName)
             .results(results)
             .programs(detailResponses)
             .build();
@@ -120,22 +136,23 @@ public class DiagnosisResultService {
 
     @Transactional
     public DiagnosisResultDTO getDiagnosisResultWithBadges() {
-        Member loginMember = memberRepository.findById(TokenService.getLoginMemberId());
+        Member loginMember = getLoginMember();
 
         String characterName = loginMember.getCharacterType().getKor();
         List<Category> categories = categoryRepository.findAll();
 
-        // 진단 결과 계산
-        List<CalculateDiagnosisResult> results = scoreService.calculateScore(categories, loginMember.getId());
-
-        // 뱃지 리스트 가져오기
+        List<CalculateDiagnosisResult> results = scoreService.calculateScore(categories,
+            loginMember.getId());
         List<BadgeType> badges = badgeService.getBadgeTypeByMember(loginMember);
 
-        // DiagnosisResult DTO로 반환
         return DiagnosisResultDTO.builder()
-                .characterType(characterName)
-                .results(results)
-                .badges(badges)
-                .build();
+            .characterType(characterName)
+            .results(results)
+            .badges(badges)
+            .build();
+    }
+
+    private Member getLoginMember() {
+        return memberRepository.findById(TokenService.getLoginMemberId());
     }
 }
