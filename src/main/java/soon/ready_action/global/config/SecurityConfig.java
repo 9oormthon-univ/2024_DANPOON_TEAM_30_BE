@@ -40,17 +40,18 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
-//            .cors(cors -> cors.configurationSource(corsConfig()));
+            )
+            .cors(cors -> cors.configurationSource(corsConfig()));
 
         http
             .authorizeHttpRequests(auth -> {
                 auth
                     .requestMatchers(
-                        "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue", "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/oauth2/**", "/login/oauth2/**", "/api/v1/auth/reissue",
+                        "/swagger-ui/**", "/v3/api-docs/**"
                     ).permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/auth/signup").hasAuthority("ROLE_GUEST")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/auth/signup")
+                    .hasAuthority("ROLE_GUEST")
                     .anyRequest().authenticated();
             });
 
@@ -74,7 +75,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfig() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://domain.com"));
+        config.setAllowedOriginPatterns(
+            List.of("http://localhost:5173", "https://ready-action.com")
+        );
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowCredentials(true);
 
