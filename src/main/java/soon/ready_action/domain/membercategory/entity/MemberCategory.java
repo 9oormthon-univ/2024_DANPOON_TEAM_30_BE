@@ -35,8 +35,14 @@ public class MemberCategory {
     private Member member;
 
     @Builder
-    public MemberCategory(Category category, Member member) {
+    private MemberCategory(Category category, Member member) {
         this.category = category;
         this.member = member;
+    }
+    public static MemberCategory createMemberCategory(Category category, Member member) {
+        return MemberCategory.builder()
+            .category(category)
+            .member(member)
+            .build();
     }
 }
